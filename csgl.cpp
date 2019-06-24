@@ -176,7 +176,7 @@ bool CSGL::Rotatef(float angle,float nx,float ny,float nz)
  matrix.w.z=0;
  matrix.w.w=1;
 
- if (CurrentSelectedMatrix==MATRIX_MODE_PROJECTION) 
+ if (CurrentSelectedMatrix==MATRIX_MODE_PROJECTION)
  {
   SGuMatrix4 tmp_matrix=ProjectionMatrix;
   MultiplySGuMatrix4(matrix,tmp_matrix,ProjectionMatrix);
@@ -347,54 +347,55 @@ bool CSGL::DrawTriangle(SGuNVCTPoint A,SGuNVCTPoint B,SGuNVCTPoint C)
  }
 
  //проверим, попадает ли треугольник в порт просмотра
- float starty=A.sGuVertex.y;
- float endy=C.sGuVertex.y;
+ fixed_t starty=float2fixed_t(A.sGuVertex.y);
+ fixed_t endy=float2fixed_t(C.sGuVertex.y);
  if (starty==endy) return(true);//нечего рисовать
- if (starty>=ViewPort.y+ViewPort.w) return(true);//треугольник не виден
- if (endy<ViewPort.x) return(true);//треугольник не виден
- if (starty<ViewPort.x) starty=0;
- if (endy>=ViewPort.y+ViewPort.w) endy=ViewPort.y+ViewPort.w-1;
+ if (starty>=float2fixed_t(ViewPort.y+ViewPort.w)) return(true);//треугольник не виден
+ if (endy<float2fixed_t(ViewPort.x)) return(true);//треугольник не виден
+ if (starty<float2fixed_t(ViewPort.x)) starty=float2fixed_t(0);
+ if (endy>=float2fixed_t(ViewPort.y+ViewPort.w)) endy=float2fixed_t(ViewPort.y+ViewPort.w-1);
 
- float cx1=A.sGuVertex.x+(starty-A.sGuVertex.y)*(C.sGuVertex.x-A.sGuVertex.x)/(C.sGuVertex.y-A.sGuVertex.y);
- float cx2=A.sGuVertex.x+(starty-A.sGuVertex.y)*(B.sGuVertex.x-A.sGuVertex.x)/(B.sGuVertex.y-A.sGuVertex.y);
- float dcx1=(C.sGuVertex.x-A.sGuVertex.x)/(C.sGuVertex.y-A.sGuVertex.y);
- float dcx2=(B.sGuVertex.x-A.sGuVertex.x)/(B.sGuVertex.y-A.sGuVertex.y);
+ fixed_t cx1=float2fixed_t(A.sGuVertex.x+(fixed2float(starty)-A.sGuVertex.y)*(C.sGuVertex.x-A.sGuVertex.x)/(C.sGuVertex.y-A.sGuVertex.y));
+ fixed_t cx2=float2fixed_t(A.sGuVertex.x+(fixed2float(starty)-A.sGuVertex.y)*(B.sGuVertex.x-A.sGuVertex.x)/(B.sGuVertex.y-A.sGuVertex.y));
+ fixed_t dcx1=float2fixed_t((C.sGuVertex.x-A.sGuVertex.x)/(C.sGuVertex.y-A.sGuVertex.y));
+ fixed_t dcx2=float2fixed_t((B.sGuVertex.x-A.sGuVertex.x)/(B.sGuVertex.y-A.sGuVertex.y));
  
- float cz1=A.sGuVertex.z+(starty-A.sGuVertex.y)*(C.sGuVertex.z-A.sGuVertex.z)/(C.sGuVertex.y-A.sGuVertex.y);
- float cz2=A.sGuVertex.z+(starty-A.sGuVertex.y)*(B.sGuVertex.z-A.sGuVertex.z)/(B.sGuVertex.y-A.sGuVertex.y);
- float dcz1=(C.sGuVertex.z-A.sGuVertex.z)/(C.sGuVertex.y-A.sGuVertex.y);
- float dcz2=(B.sGuVertex.z-A.sGuVertex.z)/(B.sGuVertex.y-A.sGuVertex.y);
+ fixed_t cz1=float2fixed_t(A.sGuVertex.z+(fixed2float(starty)-A.sGuVertex.y)*(C.sGuVertex.z-A.sGuVertex.z)/(C.sGuVertex.y-A.sGuVertex.y));
+ fixed_t cz2=float2fixed_t(A.sGuVertex.z+(fixed2float(starty)-A.sGuVertex.y)*(B.sGuVertex.z-A.sGuVertex.z)/(B.sGuVertex.y-A.sGuVertex.y));
+ fixed_t dcz1=float2fixed_t((C.sGuVertex.z-A.sGuVertex.z)/(C.sGuVertex.y-A.sGuVertex.y));
+ fixed_t dcz2=float2fixed_t((B.sGuVertex.z-A.sGuVertex.z)/(B.sGuVertex.y-A.sGuVertex.y));
 
- float cr1=A.sGuColor.r+(starty-A.sGuVertex.y)*(C.sGuColor.r-A.sGuColor.r)/(C.sGuVertex.y-A.sGuVertex.y);
- float cr2=A.sGuColor.r+(starty-A.sGuVertex.y)*(B.sGuColor.r-A.sGuColor.r)/(B.sGuVertex.y-A.sGuVertex.y);
- float dcr1=(C.sGuColor.r-A.sGuColor.r)/(C.sGuVertex.y-A.sGuVertex.y);
- float dcr2=(B.sGuColor.r-A.sGuColor.r)/(B.sGuVertex.y-A.sGuVertex.y);
+ fixed_t cr1=float2fixed_t(A.sGuColor.r+(fixed2float(starty)-A.sGuVertex.y)*(C.sGuColor.r-A.sGuColor.r)/(C.sGuVertex.y-A.sGuVertex.y));
+ fixed_t cr2=float2fixed_t(A.sGuColor.r+(fixed2float(starty)-A.sGuVertex.y)*(B.sGuColor.r-A.sGuColor.r)/(B.sGuVertex.y-A.sGuVertex.y));
+ fixed_t dcr1=float2fixed_t((C.sGuColor.r-A.sGuColor.r)/(C.sGuVertex.y-A.sGuVertex.y));
+ fixed_t dcr2=float2fixed_t((B.sGuColor.r-A.sGuColor.r)/(B.sGuVertex.y-A.sGuVertex.y));
 
- float cg1=A.sGuColor.g+(starty-A.sGuVertex.y)*(C.sGuColor.g-A.sGuColor.g)/(C.sGuVertex.y-A.sGuVertex.y);
- float cg2=A.sGuColor.g+(starty-A.sGuVertex.y)*(B.sGuColor.g-A.sGuColor.g)/(B.sGuVertex.y-A.sGuVertex.y);
- float dcg1=(C.sGuColor.g-A.sGuColor.g)/(C.sGuVertex.y-A.sGuVertex.y);
- float dcg2=(B.sGuColor.g-A.sGuColor.g)/(B.sGuVertex.y-A.sGuVertex.y);
+ fixed_t cg1=float2fixed_t(A.sGuColor.g+(fixed2float(starty)-A.sGuVertex.y)*(C.sGuColor.g-A.sGuColor.g)/(C.sGuVertex.y-A.sGuVertex.y));
+ fixed_t cg2=float2fixed_t(A.sGuColor.g+(fixed2float(starty)-A.sGuVertex.y)*(B.sGuColor.g-A.sGuColor.g)/(B.sGuVertex.y-A.sGuVertex.y));
+ fixed_t dcg1=float2fixed_t((C.sGuColor.g-A.sGuColor.g)/(C.sGuVertex.y-A.sGuVertex.y));
+ fixed_t dcg2=float2fixed_t((B.sGuColor.g-A.sGuColor.g)/(B.sGuVertex.y-A.sGuVertex.y));
 
- float cb1=A.sGuColor.b+(starty-A.sGuVertex.y)*(C.sGuColor.b-A.sGuColor.b)/(C.sGuVertex.y-A.sGuVertex.y);
- float cb2=A.sGuColor.b+(starty-A.sGuVertex.y)*(B.sGuColor.b-A.sGuColor.b)/(B.sGuVertex.y-A.sGuVertex.y);
- float dcb1=(C.sGuColor.b-A.sGuColor.b)/(C.sGuVertex.y-A.sGuVertex.y);
- float dcb2=(B.sGuColor.b-A.sGuColor.b)/(B.sGuVertex.y-A.sGuVertex.y);
+ fixed_t cb1=float2fixed_t(A.sGuColor.b+(fixed2float(starty)-A.sGuVertex.y)*(C.sGuColor.b-A.sGuColor.b)/(C.sGuVertex.y-A.sGuVertex.y));
+ fixed_t cb2=float2fixed_t(A.sGuColor.b+(fixed2float(starty)-A.sGuVertex.y)*(B.sGuColor.b-A.sGuColor.b)/(B.sGuVertex.y-A.sGuVertex.y));
+ fixed_t dcb1=float2fixed_t((C.sGuColor.b-A.sGuColor.b)/(C.sGuVertex.y-A.sGuVertex.y));
+ fixed_t dcb2=float2fixed_t((B.sGuColor.b-A.sGuColor.b)/(B.sGuVertex.y-A.sGuVertex.y));
 
- int mode=0;
- for(float sy=starty;sy<=endy;sy++,cx1+=dcx1,cx2+=dcx2,cz1+=dcz1,cz2+=dcz2, cr1+=dcr1,cr2+=dcr2, cg1+=dcg1,cg2+=dcg2, cb1+=dcb1,cb2+=dcb2)
+ int8_t mode=0;
+ for(fixed_t sy=starty;sy<=endy;sy+=int2fixed_t(1),cx1+=dcx1,cx2+=dcx2,cz1+=dcz1,cz2+=dcz2, cr1+=dcr1,cr2+=dcr2, cg1+=dcg1,cg2+=dcg2, cb1+=dcb1,cb2+=dcb2)
  {
-  float x1,x2;
-  float z1,z2;
-  float r1,r2;
-  float g1,g2;
-  float b1,b2;
+  fixed_t x1,x2;
+  fixed_t z1,z2;
+  fixed_t r1,r2;
+  fixed_t g1,g2;
+  fixed_t b1,b2;
+
   x1=cx1;
   z1=cz1;
   r1=cr1;
   g1=cg1;
   b1=cb1;
 
-  if (sy<B.sGuVertex.y)
+  if (sy<float2fixed_t(B.sGuVertex.y))
   {
    x2=cx2;
    z2=cz2;
@@ -407,30 +408,30 @@ bool CSGL::DrawTriangle(SGuNVCTPoint A,SGuNVCTPoint B,SGuNVCTPoint C)
   {
    if (C.sGuVertex.y==B.sGuVertex.y)
    {
-	x2=B.sGuVertex.x;
-	z2=B.sGuVertex.z;
+	x2=float2fixed_t(B.sGuVertex.x);
+	z2=float2fixed_t(B.sGuVertex.z);
 
-	r2=B.sGuColor.r;
-	g2=B.sGuColor.g;
-	b2=B.sGuColor.b;
+	r2=float2fixed_t(B.sGuColor.r);
+	g2=float2fixed_t(B.sGuColor.g);
+	b2=float2fixed_t(B.sGuColor.b);
    }
    else
    {
     if (mode==0)
 	{
-     cx2=B.sGuVertex.x+(sy-B.sGuVertex.y)*(C.sGuVertex.x-B.sGuVertex.x)/(C.sGuVertex.y-B.sGuVertex.y);
-	 dcx2=(C.sGuVertex.x-B.sGuVertex.x)/(C.sGuVertex.y-B.sGuVertex.y);
-     cz2=B.sGuVertex.z+(sy-B.sGuVertex.y)*(C.sGuVertex.z-B.sGuVertex.z)/(C.sGuVertex.y-B.sGuVertex.y);
-	 dcz2=(C.sGuVertex.z-B.sGuVertex.z)/(C.sGuVertex.y-B.sGuVertex.y);
+     cx2=float2fixed_t(B.sGuVertex.x+(fixed2float(sy)-B.sGuVertex.y)*(C.sGuVertex.x-B.sGuVertex.x)/(C.sGuVertex.y-B.sGuVertex.y));
+	 dcx2=float2fixed_t((C.sGuVertex.x-B.sGuVertex.x)/(C.sGuVertex.y-B.sGuVertex.y));
+     cz2=float2fixed_t(B.sGuVertex.z+(fixed2float(sy)-B.sGuVertex.y)*(C.sGuVertex.z-B.sGuVertex.z)/(C.sGuVertex.y-B.sGuVertex.y));
+	 dcz2=float2fixed_t((C.sGuVertex.z-B.sGuVertex.z)/(C.sGuVertex.y-B.sGuVertex.y));
 
-     cr2=B.sGuColor.r+(sy-B.sGuVertex.y)*(C.sGuColor.r-B.sGuColor.r)/(C.sGuVertex.y-B.sGuVertex.y);
-	 dcr2=(C.sGuColor.r-B.sGuColor.r)/(C.sGuVertex.y-B.sGuVertex.y);
+     cr2=float2fixed_t(B.sGuColor.r+(fixed2float(sy)-B.sGuVertex.y)*(C.sGuColor.r-B.sGuColor.r)/(C.sGuVertex.y-B.sGuVertex.y));
+	 dcr2=float2fixed_t((C.sGuColor.r-B.sGuColor.r)/(C.sGuVertex.y-B.sGuVertex.y));
 
-     cg2=B.sGuColor.g+(sy-B.sGuVertex.y)*(C.sGuColor.g-B.sGuColor.g)/(C.sGuVertex.y-B.sGuVertex.y);
-	 dcg2=(C.sGuColor.g-B.sGuColor.g)/(C.sGuVertex.y-B.sGuVertex.y);
+     cg2=float2fixed_t(B.sGuColor.g+(fixed2float(sy)-B.sGuVertex.y)*(C.sGuColor.g-B.sGuColor.g)/(C.sGuVertex.y-B.sGuVertex.y));
+	 dcg2=float2fixed_t((C.sGuColor.g-B.sGuColor.g)/(C.sGuVertex.y-B.sGuVertex.y));
 
-     cb2=B.sGuColor.b+(sy-B.sGuVertex.y)*(C.sGuColor.b-B.sGuColor.b)/(C.sGuVertex.y-B.sGuVertex.y);
-	 dcb2=(C.sGuColor.b-B.sGuColor.b)/(C.sGuVertex.y-B.sGuVertex.y);
+     cb2=float2fixed_t(B.sGuColor.b+(fixed2float(sy)-B.sGuVertex.y)*(C.sGuColor.b-B.sGuColor.b)/(C.sGuVertex.y-B.sGuVertex.y));
+	 dcb2=float2fixed_t((C.sGuColor.b-B.sGuColor.b)/(C.sGuVertex.y-B.sGuVertex.y));
 
 	 mode=1;
 	}
@@ -444,7 +445,7 @@ bool CSGL::DrawTriangle(SGuNVCTPoint A,SGuNVCTPoint B,SGuNVCTPoint C)
   }
   if (x1>x2)
   {
-   float tmp=x1;
+   fixed_t tmp=x1;
    x1=x2;
    x2=tmp;
    tmp=z1;
@@ -464,61 +465,59 @@ bool CSGL::DrawTriangle(SGuNVCTPoint A,SGuNVCTPoint B,SGuNVCTPoint C)
    b2=tmp;
   }
   //чертим линию треугольника
-  float dz=0;
-  float dr=0;
-  float dg=0;
-  float db=0;
+  fixed_t dz=int2fixed_t(0);
+  fixed_t dr=int2fixed_t(0);
+  fixed_t dg=int2fixed_t(0);
+  fixed_t db=int2fixed_t(0);
   if (x2!=x1)
   {
-   dz=(z2-z1)/(x2-x1);
-   dr=(r2-r1)/(x2-x1);
-   dg=(g2-g1)/(x2-x1);
-   db=(b2-b1)/(x2-x1);
+   dz=fixdiv((z2-z1),(x2-x1));
+   dr=fixdiv((r2-r1),(x2-x1));
+   dg=fixdiv((g2-g1),(x2-x1));
+   db=fixdiv((b2-b1),(x2-x1));
   }
-  if (x2>=ViewPort.x+ViewPort.z) x2=ViewPort.x+ViewPort.z-1;
-  if (x1<ViewPort.x)
+
+  if (x2>=float2fixed_t(ViewPort.x+ViewPort.z)) x2=float2fixed_t(ViewPort.x+ViewPort.z-1);
+  if (x1<float2fixed_t(ViewPort.x))
   {
-   x1=ViewPort.x;
-   z1+=(ViewPort.x-x1)*dz;
-   r1+=(ViewPort.x-x1)*dr;
-   g1+=(ViewPort.x-x1)*dg;
-   b1+=(ViewPort.x-x1)*db;
+   x1=float2fixed_t(ViewPort.x);
+   z1+=fixmul((float2fixed_t(ViewPort.x)-x1),dz);
+   r1+=fixmul((float2fixed_t(ViewPort.x)-x1),dr);
+   g1+=fixmul((float2fixed_t(ViewPort.x)-x1),dg);
+   b1+=fixmul((float2fixed_t(ViewPort.x)-x1),db);
   }
-  SGuScreenColor *vptr=ImageMap+((int32_t)(x1)+(ScreenHeight-(int32_t)(sy)-1)*ScreenWidth);
+  SGuScreenColor *vptr=ImageMap+(fixed2int(x1)+(ScreenHeight-fixed2int(sy)-1)*ScreenWidth);
+  float *depthptr=ZBuffer+fixed2int(x1)+(int32_t)(ScreenHeight-fixed2int(sy)-1)*ScreenWidth;  
   if (EnableDepthText==false)//тест глубины не производится
   {
-   float *depthptr=ZBuffer+(int32_t)(x1-1)+(int)(ScreenHeight-(int32_t)(sy)-1)*ScreenWidth;
-   float z=z1;
-   float r=r1;
-   float g=g1;
-   float b=b1;
-   for(float x=x1;x<=x2;x++,z+=dz,r+=dr,g+=dg,b+=db,vptr++,depthptr++)
+   fixed_t z=z1;
+   fixed_t r=r1;
+   fixed_t g=g1;
+   fixed_t b=b1;
+   for(fixed_t x=x1;x<=x2;x+=int2fixed_t(1),z+=dz,r+=dr,g+=dg,b+=db,vptr++,depthptr++)
    {
-    //*((SGuScreenColor*)(&A.sGuColor));
-	vptr->r=(uint8_t)(r);
-	vptr->g=(uint8_t)(g);
-	vptr->b=(uint8_t)(b);
- 	*(depthptr)=z;
+	vptr->r=fixed2int(r)&0xff;
+	vptr->g=fixed2int(g)&0xff;
+	vptr->b=fixed2int(b)&0xff;
+ 	*(depthptr)=fixed2float(z);
    }
   }
   else//тест глубины производится
   {
-   float *depthptr=ZBuffer+(int32_t)(x1-1)+(int32_t)(ScreenHeight-(int32_t)(sy)-1)*ScreenWidth;
-   float z=z1;
-   float r=r1;
-   float g=g1;
-   float b=b1;
-   for(float x=x1;x<=x2;x++,z+=dz,r+=dr,g+=dg,b+=db,vptr++,depthptr++)
+   fixed_t z=z1;
+   fixed_t r=r1;
+   fixed_t g=g1;
+   fixed_t b=b1;
+   for(fixed_t x=x1;x<=x2;x+=int2fixed_t(1),z+=dz,r+=dr,g+=dg,b+=db,vptr++,depthptr++)
    {
-    if (*(depthptr)<z)
+    if (float2fixed_t(*(depthptr))<z)
 	{
-	 //*(vptr)=*((SGuScreenColor*)(&A.sGuColor));
-	 vptr->r=(uint8_t)(r);
-	 vptr->g=(uint8_t)(g);
- 	 vptr->b=(uint8_t)(b);
-     *(depthptr)=z;
+	 vptr->r=fixed2int(r)&0xff;
+	 vptr->g=fixed2int(g)&0xff;
+  	 vptr->b=fixed2int(b)&0xff;
+  	 *(depthptr)=fixed2float(z);
 	}
-   }
+   }   
   }
  }
  return(true);
@@ -526,7 +525,7 @@ bool CSGL::DrawTriangle(SGuNVCTPoint A,SGuNVCTPoint B,SGuNVCTPoint C)
 bool CSGL::Clear(unsigned int mode)
 {
  if (mode&SGL_COLOR_BUFFER_BIT && ImageMap!=NULL) memset(ImageMap,0,ScreenWidth*ScreenHeight*sizeof(SGuScreenColor));
- if (mode&SGL_DEPTH_BUFFER_BIT && ZBuffer!=NULL) for(int n=0;n<ScreenWidth*ScreenHeight;n++) ZBuffer[n]=(float)(-100000.0);
+ if (mode&SGL_DEPTH_BUFFER_BIT && ZBuffer!=NULL) for(int32_t n=0;n<ScreenWidth*ScreenHeight;n++) ZBuffer[n]=(float)(-32000.0);
  return(true);
 }
 bool CSGL::Enable(unsigned int mode)

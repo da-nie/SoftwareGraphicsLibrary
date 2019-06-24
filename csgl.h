@@ -122,8 +122,8 @@ class CSGL
   //-Переменные класса-------------------------------------------------------
   SGuScreenColor* ImageMap;
   float *ZBuffer;
-  int ScreenWidth;
-  int ScreenHeight;
+  int32_t ScreenWidth;
+  int32_t ScreenHeight;
   //цвета
   SGuColor CurrentColor;//текущий цвет
   //char CurrentR;//текущий
