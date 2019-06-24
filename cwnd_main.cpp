@@ -11,7 +11,7 @@ END_MESSAGE_MAP()
 CWnd_Main::CWnd_Main(void)
 {
  cSGL.Create(640,480);
- cSGL.Perspective(60,(float)(640.0/480.0),1,100000000);
+ cSGL.Perspective(60,(float)(640.0/480.0),1,10000);
  cSGL.SetViewport(0,0,640,480);
 }
 //-Деструктор класса---------------------------------------------------------

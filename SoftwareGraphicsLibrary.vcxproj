@@ -77,10 +77,12 @@
   <ItemGroup>
     <ClInclude Include="cwnd_main.h" />
     <ClInclude Include="csgl.h" />
+    <ClInclude Include="fixmath.H" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cwnd_main.cpp" />
+    <ClCompile Include="fixmath.CPP" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="csgl.cpp" />
   </ItemGroup>

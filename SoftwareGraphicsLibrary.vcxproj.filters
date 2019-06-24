@@ -24,6 +24,9 @@
     <ClInclude Include="csgl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="fixmath.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cwnd_main.cpp">
@@ -33,6 +36,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="csgl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fixmath.CPP">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
