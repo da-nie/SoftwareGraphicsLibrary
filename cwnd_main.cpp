@@ -69,8 +69,13 @@ void CWnd_Main::Octahedron(float height)
   VectorProduct(&nx,&ny,&nz,x5-x1,y5-y1,z5-z1);
   cSGL.Color3i(255,255,255);
   cSGL.Begin();
+   cSGL.TexCoord(0,0);
    cSGL.Vertex3f(x3,y3,z3);
+	 cSGL.Color3i(255,0,255);
+	 cSGL.TexCoord(1,0);
    cSGL.Vertex3f(x5,y5,z5);
+	 cSGL.Color3i(0,255,0);
+	 cSGL.TexCoord(0,1);
    cSGL.Vertex3f(x1,y1,z1);
   cSGL.End();
   //========================================
@@ -80,8 +85,11 @@ void CWnd_Main::Octahedron(float height)
   VectorProduct(&nx,&ny,&nz,x4-x1,y4-y1,z4-z1);
   cSGL.Color3i(255,255,0);
   cSGL.Begin();
+   cSGL.TexCoord(0,0);	
    cSGL.Vertex3f(x5,y5,z5);
+	 cSGL.TexCoord(0,1);
    cSGL.Vertex3f(x4,y4,z4);
+   cSGL.TexCoord(1,0);	 
    cSGL.Vertex3f(x1,y1,z1);
   cSGL.End();
   //========================================
@@ -91,8 +99,11 @@ void CWnd_Main::Octahedron(float height)
   VectorProduct(&nx,&ny,&nz,x6-x1,y6-y1,z6-z1);
   cSGL.Color3i(255,0,255);
   cSGL.Begin();
+   cSGL.TexCoord(0,0);	
    cSGL.Vertex3f(x4,y4,z4);
+   cSGL.TexCoord(1,1);	 
    cSGL.Vertex3f(x6,y6,z6);
+   cSGL.TexCoord(0,1);	 
    cSGL.Vertex3f(x1,y1,z1);
   cSGL.End();
   //========================================
@@ -101,11 +112,11 @@ void CWnd_Main::Octahedron(float height)
   nz=z6-z1;
   VectorProduct(&nx,&ny,&nz,x3-x1,y3-y1,z3-z1);
   cSGL.Color3i(0,255,255);
-  cSGL.Begin();
+  /*cSGL.Begin();
    cSGL.Vertex3f(x6,y6,z6);
    cSGL.Vertex3f(x3,y3,z3);
    cSGL.Vertex3f(x1,y1,z1);
-  cSGL.End();
+  cSGL.End();*/
   //========================================
   nx=x4-x2;
   ny=y4-y2;
@@ -113,8 +124,11 @@ void CWnd_Main::Octahedron(float height)
   VectorProduct(&nx,&ny,&nz,x5-x2,y5-y2,z5-z2);
   cSGL.Color3i(255,0,0);
   cSGL.Begin();
+   cSGL.TexCoord(1,1);	
    cSGL.Vertex3f(x4,y4,z4);
+   cSGL.TexCoord(0,0);	 
    cSGL.Vertex3f(x5,y5,z5);
+   cSGL.TexCoord(1,0);	 
    cSGL.Vertex3f(x2,y2,z2);
   cSGL.End();
   //========================================
@@ -124,8 +138,11 @@ void CWnd_Main::Octahedron(float height)
   VectorProduct(&nx,&ny,&nz,x4-x2,y4-y2,z4-z2);
   cSGL.Color3i(0,255,0);
   cSGL.Begin();
+   cSGL.TexCoord(0,0);	
    cSGL.Vertex3f(x6,y6,z6);
+   cSGL.TexCoord(0,1);	 
    cSGL.Vertex3f(x4,y4,z4);
+   cSGL.TexCoord(1,0);	 
    cSGL.Vertex3f(x2,y2,z2);
   cSGL.End();
   //========================================
@@ -135,8 +152,11 @@ void CWnd_Main::Octahedron(float height)
   VectorProduct(&nx,&ny,&nz,x6-x2,y6-y2,z6-z2);
   cSGL.Color3i(0,0,255);
   cSGL.Begin();
+   cSGL.TexCoord(0,0);	
    cSGL.Vertex3f(x3,y3,z3);
+   cSGL.TexCoord(0,1);	 
    cSGL.Vertex3f(x6,y6,z6);
+   cSGL.TexCoord(1,1);	 
    cSGL.Vertex3f(x2,y2,z2);
   cSGL.End();
   //========================================
@@ -146,8 +166,11 @@ void CWnd_Main::Octahedron(float height)
   VectorProduct(&nx,&ny,&nz,x3-x2,y3-y2,z3-z2);
   cSGL.Color3i(127,127,255);
   cSGL.Begin();
+   cSGL.TexCoord(0,0);	
    cSGL.Vertex3f(x5,y5,z5);
+   cSGL.TexCoord(0,1);	 
    cSGL.Vertex3f(x3,y3,z3);
+   cSGL.TexCoord(1,0);	 
    cSGL.Vertex3f(x2,y2,z2);
   cSGL.End();
   //========================================
@@ -170,11 +193,28 @@ afx_msg void CWnd_Main::OnPaint(void)
  cSGL.Enable(SGL_DEPTH_TEST);
  cSGL.MatrixMode(SGL_MATRIX_MODELVIEW);
  cSGL.LoadIdentity();
- cSGL.Translatef(0,0,-20);
+ cSGL.Translatef(0,0,-15);
  cSGL.Rotatef(angle,1,1,0);
  cSGL.Translatef(0,-5,0);
  //нарисуем фигуру
  Octahedron(10);
+ /*
+  cSGL.Begin();
+   cSGL.Color3i(255,255,255);
+   cSGL.TexCoord(0,0);	
+   cSGL.Vertex3f(-10,10,0);
+   cSGL.Color3i(255,0,255);
+   cSGL.TexCoord(0,1);	 
+   cSGL.Vertex3f(-10,-10,0);
+   cSGL.Color3i(255,255,0);
+   cSGL.TexCoord(1,1);	 
+   cSGL.Vertex3f(10,-10,0);
+   cSGL.Color3i(0,255,255);
+   cSGL.TexCoord(1,0);
+   cSGL.Vertex3f(10,10,0);
+  cSGL.End();
+  */
+
  //выведем картинку на экран
  CPaintDC dc(this);
  BITMAPINFOHEADER bmih;

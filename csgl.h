@@ -31,7 +31,6 @@ struct SGuTexture
 //цвет точки
 struct SGuColor
 {
- //uint16_t Color;
  uint8_t r;
  uint8_t g;	
  uint8_t b;	
@@ -39,6 +38,7 @@ struct SGuColor
 //цвет точки экранного буфера
 struct SGuScreenColor
 {
+ //uint16_t Color;
  uint8_t r;
  uint8_t g;	
  uint8_t b;	
@@ -50,6 +50,11 @@ struct SGuNVCTPoint
  SGuColor sGuColor;
  SGuNormal sGuNormal;
  SGuVertex sGuVertex;
+};
+struct SGuScreenPoint
+{
+ int32_t x;
+ int32_t y;
 };
 //вектор 4
 struct SGuVector4
@@ -96,11 +101,11 @@ struct SGuMatrix3
 
 class CSGL
 {	
- protected:
+ private:
   enum MATRIX_MODE
   {
    MATRIX_MODE_MODEL_VIEW,
-   MATRIX_MODE_PROJECTION		
+   MATRIX_MODE_PROJECTION
   }; 
   //-Переменные класса-------------------------------------------------------
   SGuMatrix4 ProjectionMatrix;//матрица проектирования
@@ -111,7 +116,7 @@ class CSGL
   uint16_t PointArrayAmount;//размер данных в списке
   MATRIX_MODE CurrentSelectedMatrix;//текущая выбранная матрица
   bool DrawModeActive;//true-была выполнена команда Begin
-  SGuVector4 FrustumPlane[4];//четыре плоскости отсечения (каждая четверка чисел описывает плоскость: ax+by+cz+d=0)
+  SGuVector4 FrustumPlane[5];//пять плоскостей отсечения (каждая четверка чисел описывает плоскость: ax+by+cz+d=0)
   //-Функции класса----------------------------------------------------------
   //-Прочее------------------------------------------------------------------
  public:
@@ -124,6 +129,8 @@ class CSGL
   float *ZBuffer;
   int32_t ScreenWidth;
   int32_t ScreenHeight;
+  SGuTexture CurrentTexture;//текущие текструрные координаты
+ 
   //цвета
   SGuColor CurrentColor;//текущий цвет
   //char CurrentR;//текущий
@@ -146,6 +153,7 @@ class CSGL
   //функции рисования примитивов
   bool Begin(void);
   bool End(void);
+	bool TexCoord(float u,float v);
   bool Vertex3f(float x,float y,float z);
   //функции очистки экранных массивов
   bool Clear(unsigned int mode);
@@ -169,13 +177,14 @@ class CSGL
   void GetIntersectionPlaneAndLine(const SGuNVCTPoint& A,const SGuNVCTPoint& B,SGuNVCTPoint& new_point,float nx,float ny,float nz,float w);//получить точку пересечения прямой и плоскости
   void Clip(const SGuNVCTPoint *point_array_input,uint16_t point_amount_input,SGuNVCTPoint *point_array_output,uint16_t &point_amount_output,float nx,float ny,float nz,float w);//выполнить коррекцию координат  
 
-
   void OutputTriangle(SGuNVCTPoint A,SGuNVCTPoint B,SGuNVCTPoint C);//вывести треугольник
-  bool DrawTriangle(SGuNVCTPoint A,SGuNVCTPoint B,SGuNVCTPoint C);
+  void DrawTriangle(SGuNVCTPoint A,SGuNVCTPoint B,SGuNVCTPoint C);//отрисовка треугольника
+  void RenderTriangle(SGuNVCTPoint &a,SGuNVCTPoint &b,SGuNVCTPoint &c,SGuScreenPoint &ap,SGuScreenPoint &bp,SGuScreenPoint &cp);//растеризация треугольника на экране
+  void DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,float r1,float r2,float g1,float g2,float b1,float b2,float u1,float u2,float v1,float v2);//отрисовка линии
 
 
 	//-Прочее------------------------------------------------------------------
 };
 
-#endif
 
+#endif
