@@ -117,6 +117,9 @@ class CSGL
   MATRIX_MODE CurrentSelectedMatrix;//текуща€ выбранна€ матрица
   bool DrawModeActive;//true-была выполнена команда Begin
   SGuVector4 FrustumPlane[5];//п€ть плоскостей отсечени€ (кажда€ четверка чисел описывает плоскость: ax+by+cz+d=0)
+
+  static const int32_t MIN_INV_Z_VALUE=0;//минимальное значение 1/Z
+
   //-‘ункции класса----------------------------------------------------------
   //-ѕрочее------------------------------------------------------------------
  public:
@@ -126,7 +129,7 @@ class CSGL
   ~CSGL();
   //-ѕеременные класса-------------------------------------------------------
   SGuScreenColor* ImageMap;
-  float *ZBuffer;
+  float *InvZBuffer;//буфер 1/z
   int32_t ScreenWidth;
   int32_t ScreenHeight;
   SGuTexture CurrentTexture;//текущие текструрные координаты

@@ -10,7 +10,7 @@
 CSGL::CSGL(void)
 { 	
  ImageMap=NULL;
- ZBuffer=NULL;
+ InvZBuffer=NULL;
  //CurrentColor.Color=0xffff;
  CurrentColor.r=0xff;
  CurrentColor.g=0xff;
@@ -31,16 +31,16 @@ CSGL::~CSGL(void)
 {
  if (ImageMap!=NULL) delete[](ImageMap);
  ImageMap=NULL;
- if (ZBuffer!=NULL) delete[](ZBuffer);
- ZBuffer=NULL;
+ if (InvZBuffer!=NULL) delete[](InvZBuffer);
+ InvZBuffer=NULL;
 }
 //-Функции класса------------------------------------------------------------
 bool CSGL::Create(int screen_width,int screen_height)
 {
  if (ImageMap!=NULL) delete[](ImageMap);
- if (ZBuffer!=NULL) delete[](ZBuffer);
+ if (InvZBuffer!=NULL) delete[](InvZBuffer);
  ImageMap=new SGuScreenColor[screen_width*screen_height+1];
- ZBuffer=new float[screen_width*screen_height+1];
+ InvZBuffer=new float[screen_width*screen_height+1];
  ScreenWidth=screen_width;
  ScreenHeight=screen_height;
  return(true);
@@ -300,7 +300,7 @@ bool CSGL::Vertex3f(float x,float y,float z)
 bool CSGL::Clear(unsigned int mode)
 {
  if (mode&SGL_COLOR_BUFFER_BIT && ImageMap!=NULL) memset(ImageMap,0,ScreenWidth*ScreenHeight*sizeof(SGuScreenColor));
- if (mode&SGL_DEPTH_BUFFER_BIT && ZBuffer!=NULL) for(int32_t n=0;n<ScreenWidth*ScreenHeight;n++) ZBuffer[n]=(float)(-32000.0);
+ if (mode&SGL_DEPTH_BUFFER_BIT && InvZBuffer!=NULL) for(int32_t n=0;n<ScreenWidth*ScreenHeight;n++) InvZBuffer[n]=(float)(MIN_INV_Z_VALUE);
  return(true);
 }
 bool CSGL::Enable(unsigned int mode)
@@ -1051,7 +1051,7 @@ void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,float r1,f
   v1+=offset*dv;
  }
  SGuScreenColor *vptr=ImageMap+(x1+(ScreenHeight-y-1)*ScreenWidth);
- float *depthptr=ZBuffer+x1+(int32_t)(ScreenHeight-y-1)*ScreenWidth;
+ float *invdepthptr=InvZBuffer+x1+(int32_t)(ScreenHeight-y-1)*ScreenWidth;
  if (EnableDepthText==false)//тест глубины не производится
  {
   float z=z1;
@@ -1060,7 +1060,7 @@ void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,float r1,f
   float b=b1;
   float u=u1;
   float v=v1;
-  for(float x=x1;x<=x2;x++,z+=dz,r+=dr,g+=dg,b+=db,u+=du,v+=dv,vptr++,depthptr++)
+  for(float x=x1;x<=x2;x++,z+=dz,r+=dr,g+=dg,b+=db,u+=du,v+=dv,vptr++,invdepthptr++)
   {
    /*
    uint16_t color;	  
@@ -1074,9 +1074,8 @@ void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,float r1,f
    vptr->r=(int8_t)(r)&0xff;
    vptr->g=(int8_t)(g)&0xff;
    vptr->b=(int8_t)(b)&0xff;
-		
-   float real_z=1.0/z;
-   *(depthptr)=real_z;
+   
+   *(invdepthptr)=z;
   }
  }
  else//тест глубины производится
@@ -1087,10 +1086,10 @@ void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,float r1,f
   float b=b1;
   float u=u1;
   float v=v1;
-  for(float x=x1;x<=x2;x++,z+=dz,r+=dr,g+=dg,b+=db,u+=du,v+=dv,vptr++,depthptr++)
+  for(float x=x1;x<=x2;x++,z+=dz,r+=dr,g+=dg,b+=db,u+=du,v+=dv,vptr++,invdepthptr++)
   {
    float real_z=1.0/z;
-   if (*(depthptr)<real_z)
+   if (*(invdepthptr)>z)
    {
     int32_t ut=(int)(u*real_z*8.0f);
 	int32_t vt=(int)(v*real_z*8.0f);
@@ -1117,7 +1116,7 @@ void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,float r1,f
 	vptr->b=(int8_t)(cb)&0xff;
 		 
 
-    *(depthptr)=real_z;
+    *(invdepthptr)=z;
    }
   }
  }
