@@ -1086,19 +1086,57 @@ void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,float r1,f
   float b=b1;
   float u=u1;
   float v=v1;
-  for(float x=x1;x<=x2;x++,z+=dz,r+=dr,g+=dg,b+=db,u+=du,v+=dv,vptr++,invdepthptr++)
+
+  //используем линейную интерпол€цию текстуры через 16 пикселей
+  int32_t step=16;//шаг интерпол€ции
+  if ((x2-x1)<step) step=x2-x1;
+  float dz_step=dz*step;
+  float du_step=du*step;
+  float dv_step=dv*step;
+
+  float tu1=u/z;
+  float tv1=v/z;
+  float tu2=(u+du_step)/(z+dz_step);
+  float tv2=(v+dv_step)/(z+dz_step);
+  float dtu=(tu2-tu1)/step;
+  float dtv=(tv2-tv1)/step;
+
+  float tu=tu1;
+  float tv=tv1;
+
+  int32_t counter=step;
+  for(float x=x1;x<=x2;x++,z+=dz,r+=dr,g+=dg,b+=db,u+=du,v+=dv,vptr++,invdepthptr++,counter--)
   {
-   float real_z=1.0/z;
+   if (counter==0)
+   {    		 
+    counter=step;
+	if ((x2-counter)<step) step=x2-counter;
+
+    dz_step=dz*step;
+    du_step=du*step;
+    dv_step=dv*step;
+
+    tu1=u/z;
+    tv1=v/z;
+    tu2=(u+du_step)/(z+dz_step);
+    tv2=(v+dv_step)/(z+dz_step);
+    dtu=(tu2-tu1)/step;
+    dtv=(tv2-tv1)/step;
+   }
+   tu+=dtu;
+   tv+=dtv;
+
+   //float real_z=1.0f/z;
    if (*(invdepthptr)>z)
    {
-    int32_t ut=(int)(u*real_z*8.0f);
-	int32_t vt=(int)(v*real_z*8.0f);
+    int32_t ut=(int)(tu*8.0f);
+	int32_t vt=(int)(tv*8.0f);
     
     //uint16_t color;	  
     uint8_t cr=(int8_t)r;
 	uint8_t cg=(int8_t)g;
 	uint8_t cb=(int8_t)b;
-    if ((ut+vt)%2)
+    if ((ut+vt)&1)
 		{
 		
 		}
