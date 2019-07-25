@@ -75,16 +75,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="craiifilein.h" />
+    <ClInclude Include="craiifileout.h" />
     <ClInclude Include="cwnd_main.h" />
     <ClInclude Include="csgl.h" />
     <ClInclude Include="fixmath.H" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="tga.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="craiifilein.cpp" />
+    <ClCompile Include="craiifileout.cpp" />
     <ClCompile Include="cwnd_main.cpp" />
     <ClCompile Include="fixmath.CPP" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="csgl.cpp" />
+    <ClCompile Include="tga.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

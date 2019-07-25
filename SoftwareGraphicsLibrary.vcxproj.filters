@@ -27,6 +27,15 @@
     <ClInclude Include="fixmath.H">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="tga.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="craiifilein.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="craiifileout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cwnd_main.cpp">
@@ -39,6 +48,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="fixmath.CPP">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tga.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="craiifilein.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="craiifileout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

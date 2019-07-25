@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "csgl.h"
+#include <memory>
 
 class CWnd_Main:public CWnd
 {
@@ -10,6 +11,7 @@ class CWnd_Main:public CWnd
   //-Переменные класса-------------------------------------------------------
   CSGL cSGL;
   float angle;
+  std::unique_ptr<uint8_t[]> Texture_Ptr;
   //-Функции класса----------------------------------------------------------
   //-Прочее------------------------------------------------------------------
  public:
