@@ -9,6 +9,8 @@
 //подключаемые библиотеки
 //****************************************************************************************************
 #include <stdint.h>
+#include "sglmatrix.h"
+#include "cglscreencolor.h"
 
 //****************************************************************************************************
 //макроопределения
@@ -23,13 +25,6 @@
 //****************************************************************************************************
 
 #pragma pack(1)
-//точка экрана
-struct SGLScreenColor
-{
- uint8_t R;
- uint8_t G;	
- uint8_t B;	
-};
 //цвет точки RGBA в целых числах
 struct SGLRGBAByteColor
 {
@@ -90,36 +85,6 @@ class CSGL
    float G;	
    float B;	
   };
-  //вектор 4
-  struct SGLVector4
-  {
-   float X;
-   float Y;
-   float Z;
-   float W;
-  };
-  //вектор 3
-  struct SGLVector3
-  {
-   float X;
-   float Y;
-   float Z;
-  };
-  //матрица 4x4
-  struct SGLMatrix4
-  {
-   SGLVector4 X;
-   SGLVector4 Y;
-   SGLVector4 Z;
-   SGLVector4 W;
-  };
-  //матрица 3x3
-  struct SGLMatrix3
-  {
-   SGLVector3 X;
-   SGLVector3 Y;
-   SGLVector3 Z;
-  };
   //точка с текстурой, цветом, нормалью, координатами
   struct SGLNVCTPoint
   {
@@ -133,6 +98,13 @@ class CSGL
   {
    int32_t X;
    int32_t Y;
+  };
+  //точка с текстурой, цветом и нормалью
+  struct SGLNCTPoint
+  {
+   SGLTexture sGLTexture;
+   SGLColor sGLColor;
+   SGLNormal sGLNormal;   
   };
  private:
   struct SGLTextureObject
@@ -164,8 +136,11 @@ class CSGL
 
   SGLTextureObject sGLTextureObject_Current;//текущая текстура
 
+  typedef void(CSGL::*draw_line_ptr_t)(int32_t y,int32_t x1,int32_t x2,float z1,float z2,float r1,float r2,float g1,float g2,float b1,float b2,float u1,float u2,float v1,float v2);//тип указателя на функцию отрисовки горизонтальной линии
+
+  draw_line_ptr_t DrawLineFunction_Ptr;//указатель на функцию отрисовки линии
  public:
-  SGLScreenColor* ImageMap;
+  CGLScreenColor* ImageMap;
   uint32_t ScreenWidth;//размеры экрана
   uint32_t ScreenHeight;
   float *InvZBuffer;//буфер 1/z
@@ -178,7 +153,6 @@ class CSGL
  public:
   //-открытые функции-----------------------------------------------------------------------------------
   void Init(uint32_t screen_width,uint32_t screen_height);//инициализировать
-
 
   void LoadIdentity(void);//сделать матрицу единичной
   void Rotatef(float angle,float nx,float ny,float nz);//умножить текущую матрицу на матрицу поворота вокруг вектора
@@ -204,15 +178,6 @@ class CSGL
   static void SetNormalCoord(SGLNormal &sGLNormal,float nx,float ny,float nz);//задать координаты нормали
   static void SetTextureCoord(SGLTexture &sGLTexture,float u,float v);//задать координаты текстуры
   static void SetColorValue(SGLColor &sGLColor,float r,float g,float b);//задать цвет
-  static void MultiplySGLVector4ToSGLMatrix4(const SGLVector4& v,const SGLMatrix4& m,SGLVector4& v_out);//умножение вектора типа SGLVector4 на матрицу типа SGLMatrix4
-  static void MultiplySGLMatrix4ToSGLVector4(const SGLMatrix4& m,const SGLVector4& v,SGLVector4& v_out);//умножение матрицы типа SGLMatrix4 на вектор типа SGLVector4
-  static void MultiplySGLMatrix4(const SGLMatrix4& a,const SGLMatrix4& b,SGLMatrix4& out);//умножение двух матриц типа SGLMatrix4
-  static void NormaliseSGLVector4(SGLVector4& v);//нормирование вектора типа SGLMatrix4
-  static double GetDeterminantSGLMatrix4(const SGLMatrix4& matrix);//вычислить определитель матрицы типа SGLMatrix4
-  static double GetDeterminantSGLMatrix3(const SGLMatrix3& matrix);//вычислить определитель матрицы типа SGLMatrix3
-  static void GetTruncatedMatrixSGLMatrix4(long y,long x,const SGLMatrix4& input_matrix,SGLMatrix3& output_matrix);//вычислить матрицу с исключённой строкой и столбцом по координатам y и x для матрицы типа SGLMatrix4	
-  static bool CreateInvertMatrixSGLMatrix4(const SGLMatrix4& input_matrix,SGLMatrix4& output_matrix);//вычислить обратную матрицу для матрицы типа SGLMatrix4
-
  private:
   //-закрытые функции-----------------------------------------------------------------------------------  
   void CreateFrustrumPlane(void);//вычислить плоскости отсечения
@@ -222,7 +187,8 @@ class CSGL
   void OutputTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C);//вывести треугольник
   void DrawTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C);//отрисовка треугольника
   void RenderTriangle(SGLNVCTPoint &a,SGLNVCTPoint &b,SGLNVCTPoint &c,SGLScreenPoint &ap,SGLScreenPoint &bp,SGLScreenPoint &cp);//растеризация треугольника на экране
-  void DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,float r1,float r2,float g1,float g2,float b1,float b2,float u1,float u2,float v1,float v2);//отрисовка текстурированной горизонтальной линии
+  //void DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,float r1,float r2,float g1,float g2,float b1,float b2,float u1,float u2,float v1,float v2);//отрисовка текстурированной горизонтальной линии
+  void DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,const SGLNCTPoint &sGLNCTPoint_1,const SGLNCTPoint &sGLNCTPoint_2);//отрисовка текстурированной горизонтальной линии
 };
 
 #endif

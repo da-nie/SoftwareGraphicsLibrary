@@ -36,6 +36,12 @@
     <ClInclude Include="craiifileout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sglmatrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cglscreencolor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cwnd_main.cpp">
@@ -57,6 +63,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="craiifileout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sglmatrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cglscreencolor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
