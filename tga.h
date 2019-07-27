@@ -17,14 +17,14 @@
 #pragma pack(1)
 struct STGAHeader
 {
- uint8_t identsize;//размер поля заголовка 
+ uint8_t identsize;//размер поля заголовка
  uint8_t colorMapType;//если ли палитра:0-нет,1-есть
  uint8_t imageType;//тип картинки:0-нет,1-индексные цвета,2-RGB,3-оттенки серого, (3-й бит - RLE- кодирование)
  uint16_t colorMapStart;//начало карты цветов
  uint16_t colorMapLength;//количество цветов в карте
  uint8_t colorMapBits;//размерность палитры
  uint16_t xstart;//начальные координаты изображения
- uint16_t ystart;                 
+ uint16_t ystart;
  uint16_t width;//размер изображения по X
  uint16_t height;//размер изображения по Y
  uint8_t bits;//количесто бит на пиксель (8,16,24,32)

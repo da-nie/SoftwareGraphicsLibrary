@@ -109,14 +109,14 @@ void CSGL::CreateFrustrumPlane(void)
  FrustumPlane[4].Z=projection_model_view_matrix.Z.W+projection_model_view_matrix.Z.Z;
  FrustumPlane[4].W=projection_model_view_matrix.W.W+projection_model_view_matrix.W.Z;
  NormaliseSGLVector4(FrustumPlane[4]);
- 
+
  //задняя
  FrustumPlane[5].X=projection_model_view_matrix.X.W-projection_model_view_matrix.X.Z;
  FrustumPlane[5].Y=projection_model_view_matrix.Y.W-projection_model_view_matrix.Y.Z;
  FrustumPlane[5].Z=projection_model_view_matrix.Z.W-projection_model_view_matrix.Z.Z;
  FrustumPlane[5].W=projection_model_view_matrix.W.W-projection_model_view_matrix.W.Z;
  NormaliseSGLVector4(FrustumPlane[5]);
- 
+
 }
 //----------------------------------------------------------------------------------------------------
 //получить точку пересечения прямой и плоскости
@@ -174,7 +174,7 @@ void CSGL::GetIntersectionPlaneAndLine(const SGLNVCTPoint& A,const SGLNVCTPoint&
 //----------------------------------------------------------------------------------------------------
 void CSGL::Clip(const SGLNVCTPoint *point_array_input,uint16_t point_amount_input,SGLNVCTPoint *point_array_output,uint16_t &point_amount_output,float nx,float ny,float nz,float w)
 {
- point_amount_output=0; 
+ point_amount_output=0;
  for(uint16_t n=0;n<point_amount_input;n++)
  {
   long next_p=n+1;
@@ -199,7 +199,7 @@ void CSGL::Clip(const SGLNVCTPoint *point_array_input,uint16_t point_amount_inpu
    if (next_ret>0)//следующая точка видима
    {
     point_array_output[point_amount_output]=*sGLNVCTPoint_Next_Ptr;
-	point_amount_output++;
+    point_amount_output++;
    }
    else
    {
@@ -207,7 +207,7 @@ void CSGL::Clip(const SGLNVCTPoint *point_array_input,uint16_t point_amount_inpu
     SGLNVCTPoint sGLNVCTPoint_New;
     GetIntersectionPlaneAndLine(*sGLNVCTPoint_Current_Ptr,*sGLNVCTPoint_Next_Ptr,sGLNVCTPoint_New,nx,ny,nz,w);
     point_array_output[point_amount_output]=sGLNVCTPoint_New;
-	point_amount_output++;
+    point_amount_output++;
    }
   }
   else//текущая точка не видна
@@ -218,10 +218,10 @@ void CSGL::Clip(const SGLNVCTPoint *point_array_input,uint16_t point_amount_inpu
     SGLNVCTPoint sGLNVCTPoint_New;
     GetIntersectionPlaneAndLine(*sGLNVCTPoint_Current_Ptr,*sGLNVCTPoint_Next_Ptr,sGLNVCTPoint_New,nx,ny,nz,w);
     point_array_output[point_amount_output]=sGLNVCTPoint_New;
-	point_amount_output++;
+    point_amount_output++;
     //добавляем сдедующую точку
     point_array_output[point_amount_output]=*sGLNVCTPoint_Next_Ptr;
-	point_amount_output++;
+    point_amount_output++;
    }
   }
  }
@@ -232,13 +232,13 @@ void CSGL::Clip(const SGLNVCTPoint *point_array_input,uint16_t point_amount_inpu
 //----------------------------------------------------------------------------------------------------
 void CSGL::OutputTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C)
 {
- //выполняем отсечение геометрии для всех ограничивающих плоскостей 
+ //выполняем отсечение геометрии для всех ограничивающих плоскостей
  SGLNVCTPoint sGLNVCTPoint[2][3*2*4];//список хранимых вершин
- 
+
  sGLNVCTPoint[0][0]=A;
  sGLNVCTPoint[0][1]=B;
  sGLNVCTPoint[0][2]=C;
- 
+
  uint16_t point_amount=3;
  uint8_t input_index=0;
  uint8_t output_index=1;
@@ -255,14 +255,14 @@ void CSGL::OutputTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C)
   input_index=output_index;
   output_index=tmp;
  }
- if (point_amount<3) return;//нечего рисовать 
+ if (point_amount<3) return;//нечего рисовать
  //выполняем отрисовку треугольников
  for(uint8_t n=1;n<point_amount-1;n++)
  {
   uint16_t i1=n;
   uint16_t i2=n+1;
   DrawTriangle(sGLNVCTPoint[input_index][0],sGLNVCTPoint[input_index][i1],sGLNVCTPoint[input_index][i2]);
- } 
+ }
 }
 //----------------------------------------------------------------------------------------------------
 //отрисовка треугольника
@@ -272,7 +272,7 @@ void CSGL::DrawTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C)
  SGLVector4 sGLVector4_A;
  SGLVector4 sGLVector4_B;
  SGLVector4 sGLVector4_C;
-	
+
  //вычислим проекции вершин треугольника
  sGLVector4_A.X=A.sGLVertex.X;
  sGLVector4_A.Y=A.sGLVertex.Y;
@@ -432,22 +432,22 @@ void CSGL::RenderTriangle(SGLNVCTPoint &a,SGLNVCTPoint &b,SGLNVCTPoint &c,SGLScr
   {
    if (cp.Y==bp.Y)
    {
-	x2=bp.X;
-	z2=1.0f/b.sGLVertex.Z;
+    x2=bp.X;
+    z2=1.0f/b.sGLVertex.Z;
 
     sGLNCTPoint_2.sGLColor=b.sGLColor;
-	sGLNCTPoint_2.sGLTexture.U=b.sGLTexture.U/b.sGLVertex.Z;
+    sGLNCTPoint_2.sGLTexture.U=b.sGLTexture.U/b.sGLVertex.Z;
     sGLNCTPoint_2.sGLTexture.V=b.sGLTexture.V/b.sGLVertex.Z;
    }
    else
    {
     if (first_half==true)
-   	{
+       {
      float lycb=(cp.Y-bp.Y);
      float offset=sy-bp.Y;
 
-	 dcx2=(cp.X-bp.X)/lycb;
-	 dcz2=(1.0f/c.sGLVertex.Z-1.0f/b.sGLVertex.Z)/lycb;
+     dcx2=(cp.X-bp.X)/lycb;
+     dcz2=(1.0f/c.sGLVertex.Z-1.0f/b.sGLVertex.Z)/lycb;
      cx2=bp.X+offset*dcx2;
      cz2=1.0f/b.sGLVertex.Z+offset*dcz2;
 
@@ -459,24 +459,24 @@ void CSGL::RenderTriangle(SGLNVCTPoint &a,SGLNVCTPoint &b,SGLNVCTPoint &c,SGLScr
 
      dcb2=(c.sGLColor.B-b.sGLColor.B)/lycb;
      cb2=b.sGLColor.B+offset*dcb2;
-	
+
      dcu2=(c.sGLTexture.U/c.sGLVertex.Z-b.sGLTexture.U/b.sGLVertex.Z)/lycb;
      cu2=b.sGLTexture.U/b.sGLVertex.Z+offset*dcu2;
 
      dcv2=(c.sGLTexture.V/c.sGLVertex.Z-b.sGLTexture.V/b.sGLVertex.Z)/lycb;
      cv2=b.sGLTexture.V/b.sGLVertex.Z+offset*dcv2;
-	
+
      first_half=false;
-    }	
+    }
     x2=cx2;
     z2=cz2;
 
-	sGLNCTPoint_2.sGLColor.R=cr2;
-	sGLNCTPoint_2.sGLColor.G=cg2;
-	sGLNCTPoint_2.sGLColor.B=cb2;
+    sGLNCTPoint_2.sGLColor.R=cr2;
+    sGLNCTPoint_2.sGLColor.G=cg2;
+    sGLNCTPoint_2.sGLColor.B=cb2;
 
-	sGLNCTPoint_2.sGLTexture.U=cu2;
-	sGLNCTPoint_2.sGLTexture.V=cv2;
+    sGLNCTPoint_2.sGLTexture.U=cu2;
+    sGLNCTPoint_2.sGLTexture.V=cv2;
    }
   }
   if (x1>x2)
@@ -500,7 +500,6 @@ void CSGL::RenderTriangle(SGLNVCTPoint &a,SGLNVCTPoint &b,SGLNVCTPoint &c,SGLScr
 //----------------------------------------------------------------------------------------------------
 //отрисовка линии
 //----------------------------------------------------------------------------------------------------
-//void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,float r1,float r2,float g1,float g2,float b1,float b2,float u1,float u2,float v1,float v2)
 void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,const SGLNCTPoint &sGLNCTPoint_1,const SGLNCTPoint &sGLNCTPoint_2)
 {
  float u1=sGLNCTPoint_1.sGLTexture.U;
@@ -516,6 +515,9 @@ void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,const SGLN
  float r2=sGLNCTPoint_2.sGLColor.R;
  float g2=sGLNCTPoint_2.sGLColor.G;
  float b2=sGLNCTPoint_2.sGLColor.B;
+
+ //отрицательная координата текстуры - это текстура в другом направлении
+ //поэтому коррекции не требуется - достаточно просто отбросить знак
 
  u1*=sGLTextureObject_Current.Width;
  v1*=sGLTextureObject_Current.Height;
@@ -544,7 +546,7 @@ void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,const SGLN
  }
  if (x2>=ViewPort.X+ViewPort.Z) x2=ViewPort.X+ViewPort.Z-1;
  if (x1<ViewPort.X)
- {  
+ {
   float offset=(ViewPort.X-x1);
   x1=ViewPort.X;
   z1+=offset*dz;
@@ -557,100 +559,68 @@ void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,const SGLN
  CGLScreenColor *vptr=ImageMap+(x1+(ScreenHeight-y-1)*ScreenWidth);
  float *invdepthptr=InvZBuffer+x1+(int32_t)(ScreenHeight-y-1)*ScreenWidth;
 
- bool EnableDepthTest=true;
+ float z=z1;
+ float r=r1;
+ float g=g1;
+ float b=b1;
+ float u=u1;
+ float v=v1;
 
- if (EnableDepthTest==false)//тест глубины не производится
+ //используем линейную интерполяцию текстуры через заданное количество пикселей
+ int32_t step=16;//шаг интерполяции
+ if ((x2-x1)<step) step=x2-x1;
+ float dz_step=dz*step;
+ float du_step=du*step;
+ float dv_step=dv*step;
+
+ float tu1=u/z;
+ float tv1=v/z;
+ float tu2=(u+du_step)/(z+dz_step);
+ float tv2=(v+dv_step)/(z+dz_step);
+ float dtu=(tu2-tu1)/step;
+ float dtv=(tv2-tv1)/step;
+
+ float tu=tu1;
+ float tv=tv1;
+
+ int32_t counter=step;
+ for(float x=x1;x<=x2;x++,z+=dz,r+=dr,g+=dg,b+=db,u+=du,v+=dv,vptr++,invdepthptr++,counter--)
  {
-  float z=z1;
-  float r=r1;
-  float g=g1;
-  float b=b1;
-  float u=u1;
-  float v=v1;
-  for(float x=x1;x<=x2;x++,z+=dz,r+=dr,g+=dg,b+=db,u+=du,v+=dv,vptr++,invdepthptr++)
+  if (counter==0)
   {
-   vptr->SetColor((int8_t)(r*255.0)&0xff,(int8_t)(g*255.0)&0xff,(int8_t)(b*255.0)&0xff);
-   *(invdepthptr)=z;
+   counter=step;
+   if ((x2-counter)<step) step=x2-counter;
+
+   dz_step=dz*step;
+   du_step=du*step;
+   dv_step=dv*step;
+
+   tu1=u/z;
+   tv1=v/z;
+   tu2=(u+du_step)/(z+dz_step);
+   tv2=(v+dv_step)/(z+dz_step);
+   dtu=(tu2-tu1)/step;
+   dtv=(tv2-tv1)/step;
   }
- }
- else//тест глубины производится
- {
-  float z=z1;
-  float r=r1;
-  float g=g1;
-  float b=b1;
-  float u=u1;
-  float v=v1;
+  tu+=dtu;
+  tv+=dtv;
 
-  //используем линейную интерполяцию текстуры через заданное количество пикселей
-  int32_t step=16;//шаг интерполяции
-  if ((x2-x1)<step) step=x2-x1;
-  float dz_step=dz*step;
-  float du_step=du*step;
-  float dv_step=dv*step;
-
-  float tu1=u/z;
-  float tv1=v/z;
-  float tu2=(u+du_step)/(z+dz_step);
-  float tv2=(v+dv_step)/(z+dz_step);
-  float dtu=(tu2-tu1)/step;
-  float dtv=(tv2-tv1)/step;
-
-  float tu=tu1;
-  float tv=tv1;
-
-  int32_t counter=step;
-  for(float x=x1;x<=x2;x++,z+=dz,r+=dr,g+=dg,b+=db,u+=du,v+=dv,vptr++,invdepthptr++,counter--)
+  if (*(invdepthptr)>z)//условие теста глубины выполняется
   {
-   if (counter==0)
-   {    		 
-    counter=step;
-	if ((x2-counter)<step) step=x2-counter;
+   uint32_t tui=static_cast<uint32_t>(tu);
+   uint32_t tvi=static_cast<uint32_t>(tv);
 
-    dz_step=dz*step;
-    du_step=du*step;
-    dv_step=dv*step;
+   tui&=mask_texture_width;
+   tvi&=mask_texture_height;
 
-    tu1=u/z;
-    tv1=v/z;
-    tu2=(u+du_step)/(z+dz_step);
-    tv2=(v+dv_step)/(z+dz_step);
-    dtu=(tu2-tu1)/step;
-    dtv=(tv2-tv1)/step;
-   }
-   tu+=dtu;
-   tv+=dtv;
+   SGLRGBAByteColor &sGLRGBAByteColor=sGLTextureObject_Current.sGLRGBAByteColor_Ptr[tui+tvi*sGLTextureObject_Current.Width];
 
-   if (*(invdepthptr)>z)//условие теста глубины выполняется
-   {
-    int32_t tui=static_cast<int32_t>(tu);
-	int32_t tvi=static_cast<int32_t>(tv);
+   uint8_t cr=(int8_t)(r*sGLRGBAByteColor.R);
+   uint8_t cg=(int8_t)(g*sGLRGBAByteColor.G);
+   uint8_t cb=(int8_t)(b*sGLRGBAByteColor.B);
 
-	if (tui<0)
-	{
-	 tui^=0xFFFFFFFF;
-	 tui+=1;
-	 tui=sGLTextureObject_Current.Width-tui;
-	}
-	if (tvi<0) 
-	{
-	 tvi^=0xFFFFFFFF;
-	 tvi+=1;
-	 tvi=sGLTextureObject_Current.Height-tvi;
-	}
-
-	tui&=mask_texture_width;
-	tvi&=mask_texture_height;
-
-	SGLRGBAByteColor &sGLRGBAByteColor=sGLTextureObject_Current.sGLRGBAByteColor_Ptr[tui+tvi*sGLTextureObject_Current.Width];
-
-	uint8_t cr=(int8_t)(r*sGLRGBAByteColor.R);
-	uint8_t cg=(int8_t)(g*sGLRGBAByteColor.G);
-	uint8_t cb=(int8_t)(b*sGLRGBAByteColor.B);
-
-    vptr->SetColor((int8_t)(cr)&0xff,(int8_t)(cg)&0xff,(int8_t)(cb)&0xff);
-    *(invdepthptr)=z;
-   }
+   vptr->SetColor((int8_t)(cr)&0xff,(int8_t)(cg)&0xff,(int8_t)(cb)&0xff);
+   *(invdepthptr)=z;   
   }
  }
 }
@@ -678,22 +648,22 @@ void CSGL::Init(uint32_t screen_width,uint32_t screen_height)
 //----------------------------------------------------------------------------------------------------
 void CSGL::LoadIdentity(void)
 {
- sGLMatrix4_Ptr->X.X=1.0f; 
+ sGLMatrix4_Ptr->X.X=1.0f;
  sGLMatrix4_Ptr->X.Y=0;
  sGLMatrix4_Ptr->X.Z=0;
- sGLMatrix4_Ptr->X.W=0;	 
-	 
- sGLMatrix4_Ptr->Y.X=0; 
+ sGLMatrix4_Ptr->X.W=0;
+
+ sGLMatrix4_Ptr->Y.X=0;
  sGLMatrix4_Ptr->Y.Y=1.0f;
  sGLMatrix4_Ptr->Y.Z=0;
- sGLMatrix4_Ptr->Y.W=0;	 
+ sGLMatrix4_Ptr->Y.W=0;
 
- sGLMatrix4_Ptr->Z.X=0; 
+ sGLMatrix4_Ptr->Z.X=0;
  sGLMatrix4_Ptr->Z.Y=0;
  sGLMatrix4_Ptr->Z.Z=1.0f;
- sGLMatrix4_Ptr->Z.W=0;	 
+ sGLMatrix4_Ptr->Z.W=0;
 
- sGLMatrix4_Ptr->W.X=0; 
+ sGLMatrix4_Ptr->W.X=0;
  sGLMatrix4_Ptr->W.Y=0;
  sGLMatrix4_Ptr->W.Z=0;
  sGLMatrix4_Ptr->W.W=1.0f;
@@ -703,21 +673,21 @@ void CSGL::LoadIdentity(void)
 //----------------------------------------------------------------------------------------------------
 void CSGL::Rotatef(float angle,float nx,float ny,float nz)
 {
- SGLVector4 vector;	
+ SGLVector4 vector;
  vector.X=nx;
  vector.Y=ny;
  vector.Z=nz;
- vector.W=0;	
+ vector.W=0;
  NormaliseSGLVector4(vector);
- nx=vector.X;	
- ny=vector.Y;	
- nz=vector.Z;	
-	
+ nx=vector.X;
+ ny=vector.Y;
+ nz=vector.Z;
+
  float cf=cosf(PI/180.0f*angle);
  float sf=sinf(PI/180.0f*angle);
 
- SGLMatrix4	matrix;
- 
+ SGLMatrix4    matrix;
+
  matrix.X.X=nx*nx+cf*(1.0f-nx*nx);
  matrix.X.Y=nx*(1.0f-cf)*ny+nz*sf;
  matrix.X.Z=nx*(1.0f-cf)*nz-ny*sf;
@@ -746,27 +716,27 @@ void CSGL::Rotatef(float angle,float nx,float ny,float nz)
 //----------------------------------------------------------------------------------------------------
 void CSGL::Translatef(float nx,float ny,float nz)
 {
- SGLMatrix4	matrix;
- matrix.X.X=1.0f;	
- matrix.X.Y=0;	
- matrix.X.Z=0;	
- matrix.X.W=0;	
+ SGLMatrix4    matrix;
+ matrix.X.X=1.0f;
+ matrix.X.Y=0;
+ matrix.X.Z=0;
+ matrix.X.W=0;
 
- matrix.Y.X=0;	
- matrix.Y.Y=1.0f;	
- matrix.Y.Z=0;	
- matrix.Y.W=0;	
+ matrix.Y.X=0;
+ matrix.Y.Y=1.0f;
+ matrix.Y.Z=0;
+ matrix.Y.W=0;
 
- matrix.Z.X=0;	
- matrix.Z.Y=0;	
- matrix.Z.Z=1.0f;	
- matrix.Z.W=0;	
-	
- matrix.W.X=nx;	
- matrix.W.Y=ny;	
- matrix.W.Z=nz;	
- matrix.W.W=1.0f;	
-	
+ matrix.Z.X=0;
+ matrix.Z.Y=0;
+ matrix.Z.Z=1.0f;
+ matrix.Z.W=0;
+
+ matrix.W.X=nx;
+ matrix.W.Y=ny;
+ matrix.W.Z=nz;
+ matrix.W.W=1.0f;
+
  SGLMatrix4 tmp_matrix=*sGLMatrix4_Ptr;
  MultiplySGLMatrix4(matrix,tmp_matrix,*sGLMatrix4_Ptr);
 }
@@ -792,28 +762,28 @@ void CSGL::Frustrum(float left,float right,float bottom,float top,float near,flo
  MatrixMode(SGL_MATRIX_PROJECTION);
  LoadIdentity();
 
- SGLMatrix4	matrix;
+ SGLMatrix4 matrix;
  matrix.X.X=2.0f*near/(right-left);
- matrix.X.Y=0;	
- matrix.X.Z=(right+left)/(right-left);	
- matrix.X.W=0;	
+ matrix.X.Y=0;
+ matrix.X.Z=(right+left)/(right-left);
+ matrix.X.W=0;
 
- matrix.Y.X=0;	
- matrix.Y.Y=2.0f*near/(top-bottom);	
- matrix.Y.Z=(top+bottom)/(top-bottom);	
- matrix.Y.W=0;	
+ matrix.Y.X=0;
+ matrix.Y.Y=2.0f*near/(top-bottom);
+ matrix.Y.Z=(top+bottom)/(top-bottom);
+ matrix.Y.W=0;
 
- matrix.Z.X=0;	
- matrix.Z.Y=0;	
- matrix.Z.Z=-(far+near)/(far-near);	
- matrix.Z.W=-2.0f*far*near/(far-near);	
-	
- matrix.W.X=0;	
- matrix.W.Y=0;	
- matrix.W.Z=-1.0f;	
- matrix.W.W=0;	
+ matrix.Z.X=0;
+ matrix.Z.Y=0;
+ matrix.Z.Z=-(far+near)/(far-near);
+ matrix.Z.W=-2.0f*far*near/(far-near);
 
- SGLMatrix4 tmp_matrix=ProjectionMatrix;	
+ matrix.W.X=0;
+ matrix.W.Y=0;
+ matrix.W.Z=-1.0f;
+ matrix.W.W=0;
+
+ SGLMatrix4 tmp_matrix=ProjectionMatrix;
  MultiplySGLMatrix4(tmp_matrix,matrix,ProjectionMatrix);
 }
 //----------------------------------------------------------------------------------------------------
@@ -853,11 +823,11 @@ void CSGL::TexCoordf(float u,float v)
 {
  //применяем матрицу текстурирования
  SGLVector4 vector_in;
- SGLVector4 vector_out;		
+ SGLVector4 vector_out;
  vector_in.X=u;
  vector_in.Y=v;
  vector_in.Z=0;
- vector_in.W=1;	
+ vector_in.W=1;
  MultiplySGLVector4ToSGLMatrix4(vector_in,TextureMatrix,vector_out);
 
  sGLNVCTPoint_Current.sGLTexture.U=vector_out.X/vector_out.W;
@@ -904,16 +874,16 @@ void CSGL::End(void)
 //----------------------------------------------------------------------------------------------------
 void CSGL::Vertex3f(float x,float y,float z)
 {
- if (DrawMode==false) return;//режим рисования не активирован 
+ if (DrawMode==false) return;//режим рисования не активирован
  //выполним преобразование точек треугольника с учётом матрицы моделирования
- SGLVector4 vector_in;		
- SGLVector4 vector_out;	
-	
+ SGLVector4 vector_in;
+ SGLVector4 vector_out;
+
  vector_in.X=x;
  vector_in.Y=y;
  vector_in.Z=z;
  vector_in.W=1.0f;
-	
+
  MultiplySGLVector4ToSGLMatrix4(vector_in,ModelViewMatrix,vector_out);
  //занесём то, что получилось в список точек
  sGLNVCTPoint_Current.sGLVertex.X=vector_out.X/vector_out.W;
@@ -926,7 +896,7 @@ void CSGL::Vertex3f(float x,float y,float z)
  {
   OutputTriangle(sGLNVCTPointArray[0],sGLNVCTPointArray[1],sGLNVCTPointArray[2]);
   sGLNVCTPointArray[VERTEX_POINT_ARRAY-2]=sGLNVCTPointArray[VERTEX_POINT_ARRAY-1];//смещаем вершины
-  PointArrayAmount=VERTEX_POINT_ARRAY-1;//отменяем последнюю вершину  
+  PointArrayAmount=VERTEX_POINT_ARRAY-1;//отменяем последнюю вершину
  }
 }
 //----------------------------------------------------------------------------------------------------
@@ -942,14 +912,14 @@ void CSGL::ClearColor(float r,float g,float b)
 void CSGL::Clear(uint32_t mode)
 {
  if (mode&SGL_COLOR_BUFFER_BIT)
- {  
+ {
   CGLScreenColor *ptr=ImageMap;
-  uint8_t r=static_cast<uint8_t>(sGLColor_Clear.R*255.0f);
-  uint8_t g=static_cast<uint8_t>(sGLColor_Clear.G*255.0f);
-  uint8_t b=static_cast<uint8_t>(sGLColor_Clear.B*255.0f);
+  uint8_t r=static_cast<uint8_t>(sGLColor_Clear.R*MAX_COLOR_VALUE);
+  uint8_t g=static_cast<uint8_t>(sGLColor_Clear.G*MAX_COLOR_VALUE);
+  uint8_t b=static_cast<uint8_t>(sGLColor_Clear.B*MAX_COLOR_VALUE);
   for(uint32_t n=0;n<ScreenWidth*ScreenHeight;n++,ptr++) ptr->SetColor(r,g,b);
  }
- if (mode&SGL_DEPTH_BUFFER_BIT) 
+ if (mode&SGL_DEPTH_BUFFER_BIT)
  {
   float *ptr=InvZBuffer;
   for(uint32_t n=0;n<ScreenWidth*ScreenHeight;n++,ptr++) *ptr=static_cast<float>(MIN_INV_Z_VALUE);
@@ -1006,3 +976,4 @@ void CSGL::SetColorValue(SGLColor &sGLColor,float r,float g,float b)
  sGLColor.G=g;
  sGLColor.B=b;
 }
+

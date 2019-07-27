@@ -192,7 +192,7 @@ static uint8_t *GetTGAImage(uint8_t *data_ptr,uint32_t length,int32_t &width,int
     }
    }
   }
-  return(out_image);  
+  return(out_image);
  }
  //иные режимы не поддерживаем
  return(NULL);
@@ -228,7 +228,7 @@ uint8_t *LoadTGAFromFile(const char *file_name,int32_t &width,int32_t &height)
 //загрузить tga-файл из ресурсов
 //----------------------------------------------------------------------------------------------------
 uint8_t *LoadTGAFromResource(HMODULE hModule,int32_t id,int32_t &width,int32_t &height)
-{ 
+{
  HRSRC hRSRC=FindResource(hModule,(LPSTR)id,RT_RCDATA);
  if (hRSRC==NULL) return(NULL);
  HGLOBAL hGlobal=LoadResource(hModule,hRSRC);
@@ -264,3 +264,4 @@ bool SaveTGA(const char *file_name,int32_t width,int32_t height,uint8_t *image)
  if (cRAIIFileOut.GetHandle().write(reinterpret_cast<char*>(image),sizeof(uint8_t)*width*height*4).fail()==true) return(false);
  return(true);
 }
+

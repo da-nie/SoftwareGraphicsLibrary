@@ -56,7 +56,7 @@ void MultiplySGLMatrix4(const SGLMatrix4& a,const SGLMatrix4& b,SGLMatrix4& out)
 void NormaliseSGLVector4(SGLVector4& v);//нормирование вектора типа SGLMatrix4
 double GetDeterminantSGLMatrix4(const SGLMatrix4& matrix);//вычислить определитель матрицы типа SGLMatrix4
 double GetDeterminantSGLMatrix3(const SGLMatrix3& matrix);//вычислить определитель матрицы типа SGLMatrix3
-void GetTruncatedMatrixSGLMatrix4(long y,long x,const SGLMatrix4& input_matrix,SGLMatrix3& output_matrix);//вычислить матрицу с исключённой строкой и столбцом по координатам y и x для матрицы типа SGLMatrix4	
+void GetTruncatedMatrixSGLMatrix4(long y,long x,const SGLMatrix4& input_matrix,SGLMatrix3& output_matrix);//вычислить матрицу с исключённой строкой и столбцом по координатам y и x для матрицы типа SGLMatrix4
 bool CreateInvertMatrixSGLMatrix4(const SGLMatrix4& input_matrix,SGLMatrix4& output_matrix);//вычислить обратную матрицу для матрицы типа SGLMatrix4
 
 #endif

@@ -44,3 +44,4 @@ inline fixed_t frac(fixed_t x)
  return(x&0xFFFFl);
 }
 #endif
+

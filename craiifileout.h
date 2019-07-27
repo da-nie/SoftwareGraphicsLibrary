@@ -27,7 +27,7 @@ class CRAIIFileOut
   //конструктор
   CRAIIFileOut(const std::string &file_name,std::ios_base::openmode mode):FileName(file_name)
   {
-   File.open(file_name.c_str(),mode);   
+   File.open(file_name.c_str(),mode);
   }
   //деструктор
   ~CRAIIFileOut(void)
@@ -59,10 +59,11 @@ class CRAIIFileOut
   void Open(const std::string &file_name,std::ios_base::openmode mode)
   {
    Close();
-   FileName=file_name;   
+   FileName=file_name;
    File.open(file_name.c_str(),mode);
   }
 };
 
 
 #endif
+

@@ -23,7 +23,7 @@ class CRAIIFileIn
   //конструктор
   CRAIIFileIn(const std::string &file_name,std::ios_base::openmode mode):FileName(file_name)
   {
-   File.open(file_name.c_str(),mode);   
+   File.open(file_name.c_str(),mode);
   }
   //деструктор
   ~CRAIIFileIn(void)
@@ -47,17 +47,18 @@ class CRAIIFileIn
   }
   //закрыть файл
   void Close(void)
-  {   
+  {
    File.close();
   }
   //открыть файл
   void Open(const std::string &file_name,std::ios_base::openmode mode)
   {
    Close();
-   FileName=file_name;   
+   FileName=file_name;
    File.open(file_name.c_str(),mode);
   }
 };
 
 
 #endif
+
