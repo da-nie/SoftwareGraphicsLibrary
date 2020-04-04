@@ -47,8 +47,29 @@ CSGL::CSGL(void)
  InvZBuffer=NULL;
 
  BindTexture(0,0,NULL);
+ float param[3]={0,0,0};
+ Materialfv(SGL_AMBIENT,param);
+ Materialfv(SGL_DIFFUSE,param);
+ Materialfv(SGL_SPECULAR,param);
+ Materialfv(SGL_EMISSION,param);
+ Materialfv(SGL_SHININESS,param);
 
- //DrawLineFunction_Ptr=&CSGL::DrawLine;
+ Disable(SGL_LIGHTING);
+ for(uint32_t n=0;n<LIGHT_AMOUNT;n++)
+ {
+  ITEM_ID id=static_cast<ITEM_ID>(SGL_LIGHT0+n);
+  Disable(id);
+  Lightfv(id,SGL_POSITION,param);
+  Lightfv(id,SGL_AMBIENT,param);
+  Lightfv(id,SGL_DIFFUSE,param);
+  Lightfv(id,SGL_SPECULAR,param);
+  Lightfv(id,SGL_SHININESS,param);
+  float v=1;
+  Lightfv(id,SGL_CONSTANT_ATTENUATION,&v);
+  v=0;
+  Lightfv(id,SGL_LINEAR_ATTENUATION,&v);
+  Lightfv(id,SGL_QUADRATIC_ATTENUATION,&v);
+ }
 }
 //----------------------------------------------------------------------------------------------------
 //деструктор
@@ -64,9 +85,62 @@ CSGL::~CSGL()
 //****************************************************************************************************
 
 //----------------------------------------------------------------------------------------------------
-//
+//вычислить цвет точки по источникам света
 //----------------------------------------------------------------------------------------------------
+void CSGL::CreateLighColor(SGLNVCTPoint &sGLNVCTPoint)
+{ 
+ sGLNVCTPoint.sGLColor.R=sGLNVCTPoint.sGLMaterial.SGLColor_Emission.R;
+ sGLNVCTPoint.sGLColor.G=sGLNVCTPoint.sGLMaterial.SGLColor_Emission.G;
+ sGLNVCTPoint.sGLColor.B=sGLNVCTPoint.sGLMaterial.SGLColor_Emission.B;
+ for(uint32_t n=0;n<LIGHT_AMOUNT;n++)
+ {
+  SLight *sLight_Ptr=&sLight[n];
+  if (sLight_Ptr->Enabled==false) continue;
+  //вычислим расстояние между источником и точкой
+  SGLVector4 sGLVector4_Distance;
+  sGLVector4_Distance.X=sLight_Ptr->sGLVertex.X-sGLNVCTPoint.sGLVertex.X;
+  sGLVector4_Distance.Y=sLight_Ptr->sGLVertex.Y-sGLNVCTPoint.sGLVertex.Y;
+  sGLVector4_Distance.Z=sLight_Ptr->sGLVertex.Z-sGLNVCTPoint.sGLVertex.Z;
+  sGLVector4_Distance.W=1.0f;
+  float dist=GetNorma(sGLVector4_Distance);
+  NormaliseSGLVector4(sGLVector4_Distance);
+  //определим затухание от расстояния
+  float k=sLight_Ptr->ConstantAttenuation+sLight_Ptr->LinearAttenuation*dist+sLight_Ptr->QuadraticAttenuation*dist*dist;
+  k=1.0f/k;
+  //определим скалярное произведение между нормалью к точке и вектором к источнику света
+  float scalar=sGLVector4_Distance.X*sGLNVCTPoint.sGLNormal.Nx+sGLVector4_Distance.Y*sGLNVCTPoint.sGLNormal.Ny+sGLVector4_Distance.Z*sGLNVCTPoint.sGLNormal.Nz;
+  if (scalar<0) scalar=-scalar;//вершина с другой стороны от источника света, но мы считаем одинаково (так удобнее) 
+  float scalar_sh=pow(scalar,sLight_Ptr->Shininess);
+  //вычисляем освещённость
+  SGLColor sGLColor_Local;
+  float ar=sGLNVCTPoint.sGLMaterial.SGLColor_Ambient.R*sLight_Ptr->SGLColor_Ambient.R;
+  float dr=sGLNVCTPoint.sGLMaterial.SGLColor_Diffuse.R*sLight_Ptr->SGLColor_Diffuse.R;
+  float sr=sGLNVCTPoint.sGLMaterial.SGLColor_Specular.R*sLight_Ptr->SGLColor_Specular.R;
 
+  float ag=sGLNVCTPoint.sGLMaterial.SGLColor_Ambient.G*sLight_Ptr->SGLColor_Ambient.G;
+  float dg=sGLNVCTPoint.sGLMaterial.SGLColor_Diffuse.G*sLight_Ptr->SGLColor_Diffuse.G;
+  float sg=sGLNVCTPoint.sGLMaterial.SGLColor_Specular.G*sLight_Ptr->SGLColor_Specular.G;
+
+  float ab=sGLNVCTPoint.sGLMaterial.SGLColor_Ambient.B*sLight_Ptr->SGLColor_Ambient.B;
+  float db=sGLNVCTPoint.sGLMaterial.SGLColor_Diffuse.B*sLight_Ptr->SGLColor_Diffuse.B;
+  float sb=sGLNVCTPoint.sGLMaterial.SGLColor_Specular.B*sLight_Ptr->SGLColor_Specular.B;
+
+  sGLColor_Local.R=(ar+dr*scalar+sr*scalar_sh)*k;
+  sGLColor_Local.G=(ag+dg*scalar+sg*scalar_sh)*k;
+  sGLColor_Local.B=(ab+db*scalar+sb*scalar_sh)*k;
+
+  sGLNVCTPoint.sGLColor.R+=sGLColor_Local.R;
+  sGLNVCTPoint.sGLColor.G+=sGLColor_Local.G;
+  sGLNVCTPoint.sGLColor.B+=sGLColor_Local.B;
+ }
+ if (sGLNVCTPoint.sGLColor.R>1) sGLNVCTPoint.sGLColor.R=1;
+ if (sGLNVCTPoint.sGLColor.G>1) sGLNVCTPoint.sGLColor.G=1;
+ if (sGLNVCTPoint.sGLColor.B>1) sGLNVCTPoint.sGLColor.B=1;
+
+ if (sGLNVCTPoint.sGLColor.R<0) sGLNVCTPoint.sGLColor.R=0;
+ if (sGLNVCTPoint.sGLColor.G<0) sGLNVCTPoint.sGLColor.G=0;
+ if (sGLNVCTPoint.sGLColor.B<0) sGLNVCTPoint.sGLColor.B=0;
+}
 //----------------------------------------------------------------------------------------------------
 //вычислить плоскости отсечения
 //----------------------------------------------------------------------------------------------------
@@ -231,15 +305,18 @@ void CSGL::Clip(const SGLNVCTPoint *point_array_input,uint16_t point_amount_inpu
 //вывести треугольник
 //----------------------------------------------------------------------------------------------------
 void CSGL::OutputTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C)
-{
+{ 	
+ const uint16_t BUFFERS=2;//два буфера
+ const uint16_t POINTS_IN_TRIANGLE=3;//три точки для каждого треугольника
+ const uint16_t POINTS_TO_NEW_POINTS=2;//каждая точка может дать две точки при отсечении
  //выполняем отсечение геометрии для всех ограничивающих плоскостей
- SGLNVCTPoint sGLNVCTPoint[2][3*2*4];//список хранимых вершин
+ SGLNVCTPoint sGLNVCTPoint[BUFFERS][POINTS_IN_TRIANGLE*POINTS_TO_NEW_POINTS*FRUSTRUM_PLANE];//список хранимых вершин
 
  sGLNVCTPoint[0][0]=A;
  sGLNVCTPoint[0][1]=B;
  sGLNVCTPoint[0][2]=C;
 
- uint16_t point_amount=3;
+ uint16_t point_amount=POINTS_IN_TRIANGLE;
  uint8_t input_index=0;
  uint8_t output_index=1;
 
@@ -255,7 +332,7 @@ void CSGL::OutputTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C)
   input_index=output_index;
   output_index=tmp;
  }
- if (point_amount<3) return;//нечего рисовать
+ if (point_amount<POINTS_IN_TRIANGLE) return;//нечего рисовать
  //выполняем отрисовку треугольников
  for(uint8_t n=1;n<point_amount-1;n++)
  {
@@ -493,7 +570,6 @@ void CSGL::RenderTriangle(SGLNVCTPoint &a,SGLNVCTPoint &b,SGLNVCTPoint &c,SGLScr
    sGLNCTPoint_2=sGLNCTPoint_tmp;
   }
   //чертим линию треугольника
-  //(this->*DrawLineFunction_Ptr)(sy,x1,x2,z1,z2,r1,r2,g1,g2,b1,b2,u1,u2,v1,v2);
   DrawLine(sy,x1,x2,z1,z2,sGLNCTPoint_1,sGLNCTPoint_2);
  }
 }
@@ -607,19 +683,19 @@ void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,const SGLN
 
   if (*(invdepthptr)>z)//условие теста глубины выполняется
   {
-   uint32_t tui=static_cast<uint32_t>(tu);
-   uint32_t tvi=static_cast<uint32_t>(tv);
+   uint32_t tui=static_cast<uint32_t>(abs(tu));
+   uint32_t tvi=static_cast<uint32_t>(abs(tv));
 
    tui&=mask_texture_width;
    tvi&=mask_texture_height;
 
    SGLRGBAByteColor &sGLRGBAByteColor=sGLTextureObject_Current.sGLRGBAByteColor_Ptr[tui+tvi*sGLTextureObject_Current.Width];
 
-   uint8_t cr=(int8_t)(r*sGLRGBAByteColor.R);
-   uint8_t cg=(int8_t)(g*sGLRGBAByteColor.G);
-   uint8_t cb=(int8_t)(b*sGLRGBAByteColor.B);
+   uint8_t cr=(uint8_t)(r*sGLRGBAByteColor.R);
+   uint8_t cg=(uint8_t)(g*sGLRGBAByteColor.G);
+   uint8_t cb=(uint8_t)(b*sGLRGBAByteColor.B);
 
-   vptr->SetColor((int8_t)(cr)&0xff,(int8_t)(cg)&0xff,(int8_t)(cb)&0xff);
+   vptr->SetColor((uint8_t)(cr)&0xff,(uint8_t)(cg)&0xff,(uint8_t)(cb)&0xff);
    *(invdepthptr)=z;   
   }
  }
@@ -641,7 +717,6 @@ void CSGL::Init(uint32_t screen_width,uint32_t screen_height)
  ImageMap=new CGLScreenColor[screen_width*screen_height];
  InvZBuffer=new float[screen_width*screen_height];
 }
-
 
 //----------------------------------------------------------------------------------------------------
 //сделать матрицу единичной
@@ -686,7 +761,7 @@ void CSGL::Rotatef(float angle,float nx,float ny,float nz)
  float cf=cosf(PI/180.0f*angle);
  float sf=sinf(PI/180.0f*angle);
 
- SGLMatrix4    matrix;
+ SGLMatrix4 matrix;
 
  matrix.X.X=nx*nx+cf*(1.0f-nx*nx);
  matrix.X.Y=nx*(1.0f-cf)*ny+nz*sf;
@@ -716,7 +791,7 @@ void CSGL::Rotatef(float angle,float nx,float ny,float nz)
 //----------------------------------------------------------------------------------------------------
 void CSGL::Translatef(float nx,float ny,float nz)
 {
- SGLMatrix4    matrix;
+ SGLMatrix4 matrix;
  matrix.X.X=1.0f;
  matrix.X.Y=0;
  matrix.X.Z=0;
@@ -890,6 +965,7 @@ void CSGL::Vertex3f(float x,float y,float z)
  sGLNVCTPoint_Current.sGLVertex.Y=vector_out.Y/vector_out.W;
  sGLNVCTPoint_Current.sGLVertex.Z=vector_out.Z/vector_out.W;
  sGLNVCTPointArray[PointArrayAmount]=sGLNVCTPoint_Current;
+ if (EnableLighting==true) CreateLighColor(sGLNVCTPointArray[PointArrayAmount]);//вычисляем освещённость точки для режима работы с источниками света
  PointArrayAmount++;
  //отрисовываем вершины
  if (PointArrayAmount==VERTEX_POINT_ARRAY)//уже есть точки на треугольник
@@ -934,8 +1010,154 @@ void CSGL::BindTexture(uint32_t width,uint32_t height,SGLRGBAByteColor *sGLRGBAB
  sGLTextureObject_Current.Height=height;
  sGLTextureObject_Current.sGLRGBAByteColor_Ptr=sGLRGBAByteColor_Ptr_Set;
 }
+//----------------------------------------------------------------------------------------------------
+//разрешить
+//----------------------------------------------------------------------------------------------------
+void CSGL::Enable(ITEM_ID mode)
+{
+ if (mode==SGL_LIGHTING) EnableLighting=true;
+ if (mode==SGL_LIGHT0) sLight[0].Enabled=true;
+ if (mode==SGL_LIGHT1) sLight[1].Enabled=true;
+ if (mode==SGL_LIGHT2) sLight[2].Enabled=true;
+ if (mode==SGL_LIGHT3) sLight[3].Enabled=true;
+ if (mode==SGL_LIGHT4) sLight[4].Enabled=true;
+ if (mode==SGL_LIGHT5) sLight[5].Enabled=true;
+ if (mode==SGL_LIGHT6) sLight[6].Enabled=true;
+ if (mode==SGL_LIGHT7) sLight[7].Enabled=true;
+}
+//----------------------------------------------------------------------------------------------------
+//запретить
+//----------------------------------------------------------------------------------------------------
+void CSGL::Disable(ITEM_ID mode)
+{
+ if (mode==SGL_LIGHTING) EnableLighting=false;
+ if (mode==SGL_LIGHT0) sLight[0].Enabled=false;
+ if (mode==SGL_LIGHT1) sLight[1].Enabled=false;
+ if (mode==SGL_LIGHT2) sLight[2].Enabled=false;
+ if (mode==SGL_LIGHT3) sLight[3].Enabled=false;
+ if (mode==SGL_LIGHT4) sLight[4].Enabled=false;
+ if (mode==SGL_LIGHT5) sLight[5].Enabled=false;
+ if (mode==SGL_LIGHT6) sLight[6].Enabled=false;
+ if (mode==SGL_LIGHT7) sLight[7].Enabled=false;
+}
+//----------------------------------------------------------------------------------------------------
+//задать параметры источника света
+//----------------------------------------------------------------------------------------------------
+void CSGL::Lightfv(ITEM_ID light,PARAM_ID param,float *ptr)
+{
+ SLight *sLight_Ptr=NULL;
+ if (light==SGL_LIGHT0) sLight_Ptr=&sLight[0];
+ if (light==SGL_LIGHT1) sLight_Ptr=&sLight[1];
+ if (light==SGL_LIGHT2) sLight_Ptr=&sLight[2];
+ if (light==SGL_LIGHT3) sLight_Ptr=&sLight[3];
+ if (light==SGL_LIGHT4) sLight_Ptr=&sLight[4];
+ if (light==SGL_LIGHT5) sLight_Ptr=&sLight[5];
+ if (light==SGL_LIGHT6) sLight_Ptr=&sLight[6];
+ if (light==SGL_LIGHT7) sLight_Ptr=&sLight[7];
+ if (sLight_Ptr==NULL) return;
+ if (param==SGL_POSITION)
+ {
+  sLight_Ptr->sGLVertex.X=*(ptr+0);
+  sLight_Ptr->sGLVertex.Y=*(ptr+1);
+  sLight_Ptr->sGLVertex.Z=*(ptr+2);
 
+  //вычислим положение источника света с учётом матрицы моделирования
+  SGLVector4 vector_in;
+  SGLVector4 vector_out;
 
+  vector_in.X=sLight_Ptr->sGLVertex.X;
+  vector_in.Y=sLight_Ptr->sGLVertex.Y;
+  vector_in.Z=sLight_Ptr->sGLVertex.Z;
+  vector_in.W=1.0f;
+
+  MultiplySGLVector4ToSGLMatrix4(vector_in,ModelViewMatrix,vector_out);
+
+  sLight_Ptr->sGLVertex.X=vector_out.X/vector_out.W;
+  sLight_Ptr->sGLVertex.Y=vector_out.Y/vector_out.W;
+  sLight_Ptr->sGLVertex.Z=vector_out.Z/vector_out.W;
+  return;
+ }
+ if (param==SGL_AMBIENT)
+ {
+  sLight_Ptr->SGLColor_Ambient.R=*(ptr+0);
+  sLight_Ptr->SGLColor_Ambient.G=*(ptr+1);
+  sLight_Ptr->SGLColor_Ambient.B=*(ptr+2);
+  return;
+ }
+ if (param==SGL_DIFFUSE)
+ {
+  sLight_Ptr->SGLColor_Diffuse.R=*(ptr+0);
+  sLight_Ptr->SGLColor_Diffuse.G=*(ptr+1);
+  sLight_Ptr->SGLColor_Diffuse.B=*(ptr+2);
+  return;
+ }
+ if (param==SGL_SPECULAR)
+ {
+  sLight_Ptr->SGLColor_Specular.R=*(ptr+0);
+  sLight_Ptr->SGLColor_Specular.G=*(ptr+1);
+  sLight_Ptr->SGLColor_Specular.B=*(ptr+2);
+  return;
+ }
+ if (param==SGL_SHININESS)
+ {
+  sLight_Ptr->Shininess=*(ptr+0);
+  return;
+ }
+ if (param==SGL_CONSTANT_ATTENUATION)
+ {
+  sLight_Ptr->ConstantAttenuation=*(ptr+0);
+  return;
+ }
+ if (param==SGL_LINEAR_ATTENUATION)
+ {
+  sLight_Ptr->LinearAttenuation=*(ptr+0);
+  return;
+ }
+ if (param==SGL_QUADRATIC_ATTENUATION)
+ {
+  sLight_Ptr->QuadraticAttenuation=*(ptr+0);
+  return;
+ }
+}
+//----------------------------------------------------------------------------------------------------
+//задать параметры материала
+//----------------------------------------------------------------------------------------------------
+void CSGL::Materialfv(PARAM_ID param,float *ptr)
+{
+ if (param==SGL_AMBIENT)
+ {
+  sGLNVCTPoint_Current.sGLMaterial.SGLColor_Ambient.R=*(ptr+0);
+  sGLNVCTPoint_Current.sGLMaterial.SGLColor_Ambient.G=*(ptr+1);
+  sGLNVCTPoint_Current.sGLMaterial.SGLColor_Ambient.B=*(ptr+2);
+  return;
+ }
+ if (param==SGL_DIFFUSE)
+ {
+  sGLNVCTPoint_Current.sGLMaterial.SGLColor_Diffuse.R=*(ptr+0);
+  sGLNVCTPoint_Current.sGLMaterial.SGLColor_Diffuse.G=*(ptr+1);
+  sGLNVCTPoint_Current.sGLMaterial.SGLColor_Diffuse.B=*(ptr+2);
+  return;
+ }
+ if (param==SGL_SPECULAR)
+ {
+  sGLNVCTPoint_Current.sGLMaterial.SGLColor_Specular.R=*(ptr+0);
+  sGLNVCTPoint_Current.sGLMaterial.SGLColor_Specular.G=*(ptr+1);
+  sGLNVCTPoint_Current.sGLMaterial.SGLColor_Specular.B=*(ptr+2);
+  return;
+ }
+ if (param==SGL_EMISSION)
+ {
+  sGLNVCTPoint_Current.sGLMaterial.SGLColor_Emission.R=*(ptr+0);
+  sGLNVCTPoint_Current.sGLMaterial.SGLColor_Emission.G=*(ptr+1);
+  sGLNVCTPoint_Current.sGLMaterial.SGLColor_Emission.B=*(ptr+2);
+  return;
+ }
+ if (param==SGL_SHININESS)
+ {
+  sGLNVCTPoint_Current.sGLMaterial.Shininess=*(ptr+0);
+  return;
+ }
+}
 
 //****************************************************************************************************
 //статические функции

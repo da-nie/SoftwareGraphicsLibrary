@@ -72,6 +72,7 @@ void CWnd_Main::Octahedron(float height)
   ny=y3-y1;
   nz=z3-z1;
   VectorProduct(&nx,&ny,&nz,x5-x1,y5-y1,z5-z1);
+  cSGL.Normal3f(nx,ny,nz);
   cSGL.Color3f(1,1,1);
   cSGL.Begin();
    cSGL.TexCoordf(0,0);
@@ -88,6 +89,7 @@ void CWnd_Main::Octahedron(float height)
   ny=y5-y1;
   nz=z5-z1;
   VectorProduct(&nx,&ny,&nz,x4-x1,y4-y1,z4-z1);
+  cSGL.Normal3f(nx,ny,nz);
   cSGL.Color3f(1,1,0);
   cSGL.Begin();
    cSGL.TexCoordf(0,0);
@@ -102,6 +104,7 @@ void CWnd_Main::Octahedron(float height)
   ny=y4-y1;
   nz=z4-z1;
   VectorProduct(&nx,&ny,&nz,x6-x1,y6-y1,z6-z1);
+  cSGL.Normal3f(nx,ny,nz);
   cSGL.Color3f(1,0,1);
   cSGL.Begin();
    cSGL.TexCoordf(0,0);
@@ -116,6 +119,7 @@ void CWnd_Main::Octahedron(float height)
   ny=y6-y1;
   nz=z6-z1;
   VectorProduct(&nx,&ny,&nz,x3-x1,y3-y1,z3-z1);
+  cSGL.Normal3f(nx,ny,nz);
   cSGL.Color3f(0,1,1);
   /*cSGL.Begin();
    cSGL.Vertex3f(x6,y6,z6);
@@ -127,6 +131,7 @@ void CWnd_Main::Octahedron(float height)
   ny=y4-y2;
   nz=z4-z2;
   VectorProduct(&nx,&ny,&nz,x5-x2,y5-y2,z5-z2);
+  cSGL.Normal3f(nx,ny,nz);
   cSGL.Color3f(1,0,0);
   cSGL.Begin();
    cSGL.TexCoordf(1,1);
@@ -141,6 +146,7 @@ void CWnd_Main::Octahedron(float height)
   ny=y6-y2;
   nz=z6-z2;
   VectorProduct(&nx,&ny,&nz,x4-x2,y4-y2,z4-z2);
+  cSGL.Normal3f(nx,ny,nz);
   cSGL.Color3f(0,1,0);
   cSGL.Begin();
    cSGL.TexCoordf(0,0);
@@ -155,6 +161,7 @@ void CWnd_Main::Octahedron(float height)
   ny=y3-y2;
   nz=z3-z2;
   VectorProduct(&nx,&ny,&nz,x6-x2,y6-y2,z6-z2);
+  cSGL.Normal3f(nx,ny,nz);
   cSGL.Color3f(0,0,1);
   cSGL.Begin();
    cSGL.TexCoordf(0,0);
@@ -169,6 +176,7 @@ void CWnd_Main::Octahedron(float height)
   ny=y5-y2;
   nz=z5-z2;
   VectorProduct(&nx,&ny,&nz,x3-x2,y3-y2,z3-z2);
+  cSGL.Normal3f(nx,ny,nz);
   cSGL.Color3f(0.5,0.5,1);
   cSGL.Begin();
    cSGL.TexCoordf(0,0);
@@ -195,20 +203,41 @@ void CWnd_Main::OnDestroy(void)
 afx_msg void CWnd_Main::OnPaint(void)
 {
  cSGL.Clear(CSGL::SGL_COLOR_BUFFER_BIT|CSGL::SGL_DEPTH_BUFFER_BIT);
- //cSGL.Enable(CSGL::SGL_DEPTH_TEST);
  cSGL.MatrixMode(CSGL::SGL_MATRIX_MODELVIEW);
  cSGL.LoadIdentity();
+
+ float l0_position[]={0,0,0};
+ float l0_ambient[]={0.5,0.5,0.5};
+ float l0_diffuse[]={0.5,1,0.5};
+ float l0_specular[]={0.9,0.9,0.9};
+ float l0_shininess[]={1};
+ cSGL.Lightfv(CSGL::SGL_LIGHT0,CSGL::SGL_POSITION,l0_position);
+ cSGL.Lightfv(CSGL::SGL_LIGHT0,CSGL::SGL_AMBIENT,l0_ambient);
+ cSGL.Lightfv(CSGL::SGL_LIGHT0,CSGL::SGL_DIFFUSE,l0_diffuse);
+ cSGL.Lightfv(CSGL::SGL_LIGHT0,CSGL::SGL_SPECULAR,l0_specular);
+ cSGL.Lightfv(CSGL::SGL_LIGHT0,CSGL::SGL_SHININESS,l0_shininess);
+
+ cSGL.Enable(CSGL::SGL_LIGHTING);
+ cSGL.Enable(CSGL::SGL_LIGHT0);
 
  cSGL.Translatef(0,0,-25);
  cSGL.Rotatef(angle,1,1,0);
  cSGL.Translatef(0,-5,0);
 
  cSGL.MatrixMode(CSGL::SGL_MATRIX_TEXTURE);
- cSGL.LoadIdentity();
- //cSGL.Translatef(angle*0.002,-angle*0.002,0);
+ cSGL.LoadIdentity(); 
  cSGL.Rotatef(angle,0,0,1);
  cSGL.Translatef(-0.5,-0.5,0);
 
+ float m0_ambient[]={0.1,0.1,0.1};
+ float m0_diffuse[]={1,1,1};
+ float m0_specular[]={0.5,0.5,0.5};
+ float m0_emission[]={0.1,0.1,0.1};
+ cSGL.Materialfv(CSGL::SGL_AMBIENT,m0_ambient);
+ cSGL.Materialfv(CSGL::SGL_DIFFUSE,m0_diffuse);
+ cSGL.Materialfv(CSGL::SGL_SPECULAR,m0_specular); 
+ cSGL.Materialfv(CSGL::SGL_EMISSION,m0_emission);
+ 
  //нарисуем фигуру
  Octahedron(10);
  

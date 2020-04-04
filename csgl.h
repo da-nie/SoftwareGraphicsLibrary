@@ -9,6 +9,8 @@
 //подключаемые библиотеки
 //****************************************************************************************************
 #include <stdint.h>
+#include <stdio.h>
+
 #include "sglmatrix.h"
 #include "cglscreencolor.h"
 
@@ -43,6 +45,32 @@ class CSGL
 {
  public:
   //-перечисления---------------------------------------------------------------------------------------
+  //варианты элементов
+  enum ITEM_ID
+  {
+   SGL_LIGHTING,//расчёт освещения
+   SGL_LIGHT0,//источник света 0
+   SGL_LIGHT1,//источник света 1
+   SGL_LIGHT2,//источник света 2
+   SGL_LIGHT3,//источник света 3
+   SGL_LIGHT4,//источник света 4
+   SGL_LIGHT5,//источник света 5
+   SGL_LIGHT6,//источник света 6
+   SGL_LIGHT7,//источник света 7
+  };
+  //параметры
+  enum PARAM_ID
+  {
+   SGL_POSITION,//позиция
+   SGL_AMBIENT,//фоновый цвет
+   SGL_DIFFUSE,//рассеянный свет
+   SGL_SPECULAR,//отражённый свет
+   SGL_SHININESS,//уровень отражения
+	 SGL_EMISSION,//уровень излучения
+   SGL_CONSTANT_ATTENUATION,//постоянное затухание
+   SGL_LINEAR_ATTENUATION,//линейное затухание
+   SGL_QUADRATIC_ATTENUATION//квадратичное затухание
+  };
   //варианты выбора матриц
   enum MATRIX_MODE
   {
@@ -86,14 +114,37 @@ class CSGL
    float R;
    float G;
    float B;
+  };  
+  //параметры материала
+  struct SGLMatherial
+  {
+   SGLColor SGLColor_Ambient;
+   SGLColor SGLColor_Diffuse;
+   SGLColor SGLColor_Specular;
+   SGLColor SGLColor_Emission;
+   float Shininess;
   };
-  //точка с текстурой, цветом, нормалью, координатами
+  //источник света
+  struct SLight
+  {
+   bool Enabled;
+   SGLVertex sGLVertex;
+   SGLColor SGLColor_Ambient;
+   SGLColor SGLColor_Diffuse;
+   SGLColor SGLColor_Specular;
+   float Shininess;
+   float ConstantAttenuation;
+   float LinearAttenuation;
+   float QuadraticAttenuation;
+  };
+  //точка с текстурой, цветом, нормалью, координатами, материалом
   struct SGLNVCTPoint
   {
    SGLTexture sGLTexture;
    SGLColor sGLColor;
    SGLNormal sGLNormal;
    SGLVertex sGLVertex;
+   SGLMatherial sGLMaterial;
   };
   //точка на экране
   struct SGLScreenPoint
@@ -119,27 +170,27 @@ class CSGL
   static const uint32_t VERTEX_POINT_ARRAY=3;//размер буфера вершин
   static const uint32_t FRUSTRUM_PLANE=6;//количество плоскостей отсечения
   static const int32_t MIN_INV_Z_VALUE=0;//минимальное значение 1/Z
+  static const uint32_t LIGHT_AMOUNT=8;//количество источников света
  private:
   //-переменные-----------------------------------------------------------------------------------------
   SGLMatrix4 ProjectionMatrix;//матрица проектирования
   SGLMatrix4 ModelViewMatrix;//матрица моделирования
   SGLMatrix4 TextureMatrix;//матрица текстурирования
-  SGLVector4 ViewPort;//вектор видового порта
+  SGLVector4 ViewPort;//вектор видового порта  
   SGLNVCTPoint sGLNVCTPointArray[VERTEX_POINT_ARRAY];//список хранимых вершин
   size_t PointArrayAmount;//размер данных в списке хранимых вершин
   SGLVector4 FrustumPlane[FRUSTRUM_PLANE];//набор плоскостей отсечения (каждая четверка чисел описывает плоскость: ax+by+cz+d=0)
   SGLNVCTPoint sGLNVCTPoint_Current;//параметры текущей точки
   SGLColor sGLColor_Clear;//цвет очистки фона
 
+  bool EnableLighting;//разрешение на общий расчёт освещения
+  SLight sLight[LIGHT_AMOUNT];//источники света
+
   SGLMatrix4 *sGLMatrix4_Ptr;//указатель на матрицу, с которой производится работа
 
   bool DrawMode;//включён ли режим рисования
 
   SGLTextureObject sGLTextureObject_Current;//текущая текстура
-
-  typedef void(CSGL::*draw_line_ptr_t)(int32_t y,int32_t x1,int32_t x2,float z1,float z2,float r1,float r2,float g1,float g2,float b1,float b2,float u1,float u2,float v1,float v2);//тип указателя на функцию отрисовки горизонтальной линии
-
-  draw_line_ptr_t DrawLineFunction_Ptr;//указатель на функцию отрисовки линии
  public:
   CGLScreenColor* ImageMap;
   uint32_t ScreenWidth;//размеры экрана
@@ -173,6 +224,10 @@ class CSGL
   void ClearColor(float r,float g,float b);//задать цвет очистки фона
   void Clear(uint32_t mode);//очистить буфер
   void BindTexture(uint32_t width,uint32_t height,SGLRGBAByteColor *sGLRGBAByteColor_Ptr_Set);//задать текстуру
+  void Enable(ITEM_ID mode);//разрешить
+  void Disable(ITEM_ID mode);//запретить
+  void Lightfv(ITEM_ID light,PARAM_ID param,float *ptr);//задать параметры источника света
+  void Materialfv(PARAM_ID param,float *ptr);//задать параметры материала
 
   //-статические функции--------------------------------------------------------------------------------
   static void SetVertexCoord(SGLVertex &sGLVertex,float x,float y,float z);//задать координаты вершины
@@ -181,6 +236,7 @@ class CSGL
   static void SetColorValue(SGLColor &sGLColor,float r,float g,float b);//задать цвет
  private:
   //-закрытые функции-----------------------------------------------------------------------------------
+  void CreateLighColor(SGLNVCTPoint &sGLNVCTPoint);//вычислить цвет точки по источникам света
   void CreateFrustrumPlane(void);//вычислить плоскости отсечения
   void GetIntersectionPlaneAndLine(const SGLNVCTPoint& A,const SGLNVCTPoint& B,SGLNVCTPoint& new_point,float nx,float ny,float nz,float w);//получить точку пересечения прямой и плоскости
   void Clip(const SGLNVCTPoint *point_array_input,uint16_t point_amount_input,SGLNVCTPoint *point_array_output,uint16_t &point_amount_output,float nx,float ny,float nz,float w);//выполнить коррекцию координат
@@ -188,7 +244,6 @@ class CSGL
   void OutputTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C);//вывести треугольник
   void DrawTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C);//отрисовка треугольника
   void RenderTriangle(SGLNVCTPoint &a,SGLNVCTPoint &b,SGLNVCTPoint &c,SGLScreenPoint &ap,SGLScreenPoint &bp,SGLScreenPoint &cp);//растеризация треугольника на экране
-  //void DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,float r1,float r2,float g1,float g2,float b1,float b2,float u1,float u2,float v1,float v2);//отрисовка текстурированной горизонтальной линии
   void DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,const SGLNCTPoint &sGLNCTPoint_1,const SGLNCTPoint &sGLNCTPoint_2);//отрисовка текстурированной горизонтальной линии
 };
 
