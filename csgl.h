@@ -2,11 +2,11 @@
 #define C_SGL_H
 
 //****************************************************************************************************
-//класс программной растеризации
+//РєР»Р°СЃСЃ РїСЂРѕРіСЂР°РјРјРЅРѕР№ СЂР°СЃС‚РµСЂРёР·Р°С†РёРё
 //****************************************************************************************************
 
 //****************************************************************************************************
-//подключаемые библиотеки
+//РїРѕРґРєР»СЋС‡Р°РµРјС‹Рµ Р±РёР±Р»РёРѕС‚РµРєРё
 //****************************************************************************************************
 #include <stdint.h>
 #include <stdio.h>
@@ -15,19 +15,19 @@
 #include "cglscreencolor.h"
 
 //****************************************************************************************************
-//макроопределения
+//РјР°РєСЂРѕРѕРїСЂРµРґРµР»РµРЅРёСЏ
 //****************************************************************************************************
 
 //****************************************************************************************************
-//константы
+//РєРѕРЅСЃС‚Р°РЅС‚С‹
 //****************************************************************************************************
 
 //****************************************************************************************************
-//предварительные объявления
+//РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Рµ РѕР±СЉСЏРІР»РµРЅРёСЏ
 //****************************************************************************************************
 
 #pragma pack(1)
-//цвет точки RGBA в целых числах
+//С†РІРµС‚ С‚РѕС‡РєРё RGBA РІ С†РµР»С‹С… С‡РёСЃР»Р°С…
 struct SGLRGBAByteColor
 {
  uint8_t R;
@@ -39,83 +39,83 @@ struct SGLRGBAByteColor
 
 
 //****************************************************************************************************
-//класс программной растеризации
+//РєР»Р°СЃСЃ РїСЂРѕРіСЂР°РјРјРЅРѕР№ СЂР°СЃС‚РµСЂРёР·Р°С†РёРё
 //****************************************************************************************************
 class CSGL
 {
  public:
-  //-перечисления---------------------------------------------------------------------------------------
-  //варианты элементов
+  //-РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ---------------------------------------------------------------------------------------
+  //РІР°СЂРёР°РЅС‚С‹ СЌР»РµРјРµРЅС‚РѕРІ
   enum ITEM_ID
   {
-   SGL_LIGHTING,//расчёт освещения
-   SGL_LIGHT0,//источник света 0
-   SGL_LIGHT1,//источник света 1
-   SGL_LIGHT2,//источник света 2
-   SGL_LIGHT3,//источник света 3
-   SGL_LIGHT4,//источник света 4
-   SGL_LIGHT5,//источник света 5
-   SGL_LIGHT6,//источник света 6
-   SGL_LIGHT7,//источник света 7
+   SGL_LIGHTING,//СЂР°СЃС‡С‘С‚ РѕСЃРІРµС‰РµРЅРёСЏ
+   SGL_LIGHT0,//РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р° 0
+   SGL_LIGHT1,//РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р° 1
+   SGL_LIGHT2,//РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р° 2
+   SGL_LIGHT3,//РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р° 3
+   SGL_LIGHT4,//РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р° 4
+   SGL_LIGHT5,//РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р° 5
+   SGL_LIGHT6,//РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р° 6
+   SGL_LIGHT7,//РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р° 7
   };
-  //параметры
+  //РїР°СЂР°РјРµС‚СЂС‹
   enum PARAM_ID
   {
-   SGL_POSITION,//позиция
-   SGL_AMBIENT,//фоновый цвет
-   SGL_DIFFUSE,//рассеянный свет
-   SGL_SPECULAR,//отражённый свет
-   SGL_SHININESS,//уровень отражения
-	 SGL_EMISSION,//уровень излучения
-   SGL_CONSTANT_ATTENUATION,//постоянное затухание
-   SGL_LINEAR_ATTENUATION,//линейное затухание
-   SGL_QUADRATIC_ATTENUATION//квадратичное затухание
+   SGL_POSITION,//РїРѕР·РёС†РёСЏ
+   SGL_AMBIENT,//С„РѕРЅРѕРІС‹Р№ С†РІРµС‚
+   SGL_DIFFUSE,//СЂР°СЃСЃРµСЏРЅРЅС‹Р№ СЃРІРµС‚
+   SGL_SPECULAR,//РѕС‚СЂР°Р¶С‘РЅРЅС‹Р№ СЃРІРµС‚
+   SGL_SHININESS,//СѓСЂРѕРІРµРЅСЊ РѕС‚СЂР°Р¶РµРЅРёСЏ
+	 SGL_EMISSION,//СѓСЂРѕРІРµРЅСЊ РёР·Р»СѓС‡РµРЅРёСЏ
+   SGL_CONSTANT_ATTENUATION,//РїРѕСЃС‚РѕСЏРЅРЅРѕРµ Р·Р°С‚СѓС…Р°РЅРёРµ
+   SGL_LINEAR_ATTENUATION,//Р»РёРЅРµР№РЅРѕРµ Р·Р°С‚СѓС…Р°РЅРёРµ
+   SGL_QUADRATIC_ATTENUATION//РєРІР°РґСЂР°С‚РёС‡РЅРѕРµ Р·Р°С‚СѓС…Р°РЅРёРµ
   };
-  //варианты выбора матриц
+  //РІР°СЂРёР°РЅС‚С‹ РІС‹Р±РѕСЂР° РјР°С‚СЂРёС†
   enum MATRIX_MODE
   {
-   SGL_MATRIX_MODELVIEW,//выбрана матрица моделирования
-   SGL_MATRIX_PROJECTION,//выбрана матрица проектирования
-   SGL_MATRIX_TEXTURE//выбрана матрица текстурирования
+   SGL_MATRIX_MODELVIEW,//РІС‹Р±СЂР°РЅР° РјР°С‚СЂРёС†Р° РјРѕРґРµР»РёСЂРѕРІР°РЅРёСЏ
+   SGL_MATRIX_PROJECTION,//РІС‹Р±СЂР°РЅР° РјР°С‚СЂРёС†Р° РїСЂРѕРµРєС‚РёСЂРѕРІР°РЅРёСЏ
+   SGL_MATRIX_TEXTURE//РІС‹Р±СЂР°РЅР° РјР°С‚СЂРёС†Р° С‚РµРєСЃС‚СѓСЂРёСЂРѕРІР°РЅРёСЏ
   };
-  //варианты очистки
+  //РІР°СЂРёР°РЅС‚С‹ РѕС‡РёСЃС‚РєРё
   enum CLEAR_MODE
   {
    SGL_COLOR_BUFFER_BIT=(1<<0),
    SGL_DEPTH_BUFFER_BIT=(1<<1)
   };
-  //-константы------------------------------------------------------------------------------------------
-  static const uint8_t MAX_COLOR_VALUE=255;//максимальное значение цвета
+  //-РєРѕРЅСЃС‚Р°РЅС‚С‹------------------------------------------------------------------------------------------
+  static const uint8_t MAX_COLOR_VALUE=255;//РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С†РІРµС‚Р°
  public:
-  //-структуры------------------------------------------------------------------------------------------
-  //координата точки
+  //-СЃС‚СЂСѓРєС‚СѓСЂС‹------------------------------------------------------------------------------------------
+  //РєРѕРѕСЂРґРёРЅР°С‚Р° С‚РѕС‡РєРё
   struct SGLVertex
   {
    float X;
    float Y;
    float Z;
   };
-  //нормаль к точке
+  //РЅРѕСЂРјР°Р»СЊ Рє С‚РѕС‡РєРµ
   struct SGLNormal
   {
    float Nx;
    float Ny;
    float Nz;
   };
-  //текстурные координаты
+  //С‚РµРєСЃС‚СѓСЂРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
   struct SGLTexture
   {
    float U;
    float V;
   };
-  //цвет точки
+  //С†РІРµС‚ С‚РѕС‡РєРё
   struct SGLColor
   {
    float R;
    float G;
    float B;
   };  
-  //параметры материала
+  //РїР°СЂР°РјРµС‚СЂС‹ РјР°С‚РµСЂРёР°Р»Р°
   struct SGLMatherial
   {
    SGLColor SGLColor_Ambient;
@@ -124,7 +124,7 @@ class CSGL
    SGLColor SGLColor_Emission;
    float Shininess;
   };
-  //источник света
+  //РёСЃС‚РѕС‡РЅРёРє СЃРІРµС‚Р°
   struct SLight
   {
    bool Enabled;
@@ -137,7 +137,7 @@ class CSGL
    float LinearAttenuation;
    float QuadraticAttenuation;
   };
-  //точка с текстурой, цветом, нормалью, координатами, материалом
+  //С‚РѕС‡РєР° СЃ С‚РµРєСЃС‚СѓСЂРѕР№, С†РІРµС‚РѕРј, РЅРѕСЂРјР°Р»СЊСЋ, РєРѕРѕСЂРґРёРЅР°С‚Р°РјРё, РјР°С‚РµСЂРёР°Р»РѕРј
   struct SGLNVCTPoint
   {
    SGLTexture sGLTexture;
@@ -146,13 +146,13 @@ class CSGL
    SGLVertex sGLVertex;
    SGLMatherial sGLMaterial;
   };
-  //точка на экране
+  //С‚РѕС‡РєР° РЅР° СЌРєСЂР°РЅРµ
   struct SGLScreenPoint
   {
    int32_t X;
    int32_t Y;
   };
-  //точка с текстурой и цветом
+  //С‚РѕС‡РєР° СЃ С‚РµРєСЃС‚СѓСЂРѕР№ Рё С†РІРµС‚РѕРј
   struct SGLNCTPoint
   {
    SGLTexture sGLTexture;
@@ -161,90 +161,90 @@ class CSGL
  private:
   struct SGLTextureObject
   {
-   uint32_t Width;//ширина
-   uint32_t Height;//высота
-   SGLRGBAByteColor *sGLRGBAByteColor_Ptr;//данные текстуры
+   uint32_t Width;//С€РёСЂРёРЅР°
+   uint32_t Height;//РІС‹СЃРѕС‚Р°
+   SGLRGBAByteColor *sGLRGBAByteColor_Ptr;//РґР°РЅРЅС‹Рµ С‚РµРєСЃС‚СѓСЂС‹
   };
  private:
-  //-константы------------------------------------------------------------------------------------------
-  static const uint32_t VERTEX_POINT_ARRAY=3;//размер буфера вершин
-  static const uint32_t FRUSTRUM_PLANE=6;//количество плоскостей отсечения
-  static const int32_t MIN_INV_Z_VALUE=0;//минимальное значение 1/Z
-  static const uint32_t LIGHT_AMOUNT=8;//количество источников света
+  //-РєРѕРЅСЃС‚Р°РЅС‚С‹------------------------------------------------------------------------------------------
+  static const uint32_t VERTEX_POINT_ARRAY=3;//СЂР°Р·РјРµСЂ Р±СѓС„РµСЂР° РІРµСЂС€РёРЅ
+  static const uint32_t FRUSTRUM_PLANE=6;//РєРѕР»РёС‡РµСЃС‚РІРѕ РїР»РѕСЃРєРѕСЃС‚РµР№ РѕС‚СЃРµС‡РµРЅРёСЏ
+  static const int32_t MIN_INV_Z_VALUE=0;//РјРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ 1/Z
+  static const uint32_t LIGHT_AMOUNT=8;//РєРѕР»РёС‡РµСЃС‚РІРѕ РёСЃС‚РѕС‡РЅРёРєРѕРІ СЃРІРµС‚Р°
  private:
-  //-переменные-----------------------------------------------------------------------------------------
-  SGLMatrix4 ProjectionMatrix;//матрица проектирования
-  SGLMatrix4 ModelViewMatrix;//матрица моделирования
-  SGLMatrix4 TextureMatrix;//матрица текстурирования
-  SGLVector4 ViewPort;//вектор видового порта  
-  SGLNVCTPoint sGLNVCTPointArray[VERTEX_POINT_ARRAY];//список хранимых вершин
-  size_t PointArrayAmount;//размер данных в списке хранимых вершин
-  SGLVector4 FrustumPlane[FRUSTRUM_PLANE];//набор плоскостей отсечения (каждая четверка чисел описывает плоскость: ax+by+cz+d=0)
-  SGLNVCTPoint sGLNVCTPoint_Current;//параметры текущей точки
-  SGLColor sGLColor_Clear;//цвет очистки фона
+  //-РїРµСЂРµРјРµРЅРЅС‹Рµ-----------------------------------------------------------------------------------------
+  SGLMatrix4 ProjectionMatrix;//РјР°С‚СЂРёС†Р° РїСЂРѕРµРєС‚РёСЂРѕРІР°РЅРёСЏ
+  SGLMatrix4 ModelViewMatrix;//РјР°С‚СЂРёС†Р° РјРѕРґРµР»РёСЂРѕРІР°РЅРёСЏ
+  SGLMatrix4 TextureMatrix;//РјР°С‚СЂРёС†Р° С‚РµРєСЃС‚СѓСЂРёСЂРѕРІР°РЅРёСЏ
+  SGLVector4 ViewPort;//РІРµРєС‚РѕСЂ РІРёРґРѕРІРѕРіРѕ РїРѕСЂС‚Р°  
+  SGLNVCTPoint sGLNVCTPointArray[VERTEX_POINT_ARRAY];//СЃРїРёСЃРѕРє С…СЂР°РЅРёРјС‹С… РІРµСЂС€РёРЅ
+  size_t PointArrayAmount;//СЂР°Р·РјРµСЂ РґР°РЅРЅС‹С… РІ СЃРїРёСЃРєРµ С…СЂР°РЅРёРјС‹С… РІРµСЂС€РёРЅ
+  SGLVector4 FrustumPlane[FRUSTRUM_PLANE];//РЅР°Р±РѕСЂ РїР»РѕСЃРєРѕСЃС‚РµР№ РѕС‚СЃРµС‡РµРЅРёСЏ (РєР°Р¶РґР°СЏ С‡РµС‚РІРµСЂРєР° С‡РёСЃРµР» РѕРїРёСЃС‹РІР°РµС‚ РїР»РѕСЃРєРѕСЃС‚СЊ: ax+by+cz+d=0)
+  SGLNVCTPoint sGLNVCTPoint_Current;//РїР°СЂР°РјРµС‚СЂС‹ С‚РµРєСѓС‰РµР№ С‚РѕС‡РєРё
+  SGLColor sGLColor_Clear;//С†РІРµС‚ РѕС‡РёСЃС‚РєРё С„РѕРЅР°
 
-  bool EnableLighting;//разрешение на общий расчёт освещения
-  SLight sLight[LIGHT_AMOUNT];//источники света
+  bool EnableLighting;//СЂР°Р·СЂРµС€РµРЅРёРµ РЅР° РѕР±С‰РёР№ СЂР°СЃС‡С‘С‚ РѕСЃРІРµС‰РµРЅРёСЏ
+  SLight sLight[LIGHT_AMOUNT];//РёСЃС‚РѕС‡РЅРёРєРё СЃРІРµС‚Р°
 
-  SGLMatrix4 *sGLMatrix4_Ptr;//указатель на матрицу, с которой производится работа
+  SGLMatrix4 *sGLMatrix4_Ptr;//СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РјР°С‚СЂРёС†Сѓ, СЃ РєРѕС‚РѕСЂРѕР№ РїСЂРѕРёР·РІРѕРґРёС‚СЃСЏ СЂР°Р±РѕС‚Р°
 
-  bool DrawMode;//включён ли режим рисования
+  bool DrawMode;//РІРєР»СЋС‡С‘РЅ Р»Рё СЂРµР¶РёРј СЂРёСЃРѕРІР°РЅРёСЏ
 
-  SGLTextureObject sGLTextureObject_Current;//текущая текстура
+  SGLTextureObject sGLTextureObject_Current;//С‚РµРєСѓС‰Р°СЏ С‚РµРєСЃС‚СѓСЂР°
  public:
   CGLScreenColor* ImageMap;
-  uint32_t ScreenWidth;//размеры экрана
+  uint32_t ScreenWidth;//СЂР°Р·РјРµСЂС‹ СЌРєСЂР°РЅР°
   uint32_t ScreenHeight;
-  float *InvZBuffer;//буфер 1/z
+  float *InvZBuffer;//Р±СѓС„РµСЂ 1/z
 
  public:
-  //-конструктор----------------------------------------------------------------------------------------
+  //-РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ----------------------------------------------------------------------------------------
   CSGL(void);
-  //-деструктор-----------------------------------------------------------------------------------------
+  //-РґРµСЃС‚СЂСѓРєС‚РѕСЂ-----------------------------------------------------------------------------------------
   ~CSGL();
  public:
-  //-открытые функции-----------------------------------------------------------------------------------
-  void Init(uint32_t screen_width,uint32_t screen_height);//инициализировать
+  //-РѕС‚РєСЂС‹С‚С‹Рµ С„СѓРЅРєС†РёРё-----------------------------------------------------------------------------------
+  void Init(uint32_t screen_width,uint32_t screen_height);//РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ
 
-  void LoadIdentity(void);//сделать матрицу единичной
-  void Rotatef(float angle,float nx,float ny,float nz);//умножить текущую матрицу на матрицу поворота вокруг вектора
-  void Translatef(float nx,float ny,float nz);//умножить текущую матрицу на матрицу смещения
-  void MatrixMode(MATRIX_MODE matrix);//выбрать матрицу
+  void LoadIdentity(void);//СЃРґРµР»Р°С‚СЊ РјР°С‚СЂРёС†Сѓ РµРґРёРЅРёС‡РЅРѕР№
+  void Rotatef(float angle,float nx,float ny,float nz);//СѓРјРЅРѕР¶РёС‚СЊ С‚РµРєСѓС‰СѓСЋ РјР°С‚СЂРёС†Сѓ РЅР° РјР°С‚СЂРёС†Сѓ РїРѕРІРѕСЂРѕС‚Р° РІРѕРєСЂСѓРі РІРµРєС‚РѕСЂР°
+  void Translatef(float nx,float ny,float nz);//СѓРјРЅРѕР¶РёС‚СЊ С‚РµРєСѓС‰СѓСЋ РјР°С‚СЂРёС†Сѓ РЅР° РјР°С‚СЂРёС†Сѓ СЃРјРµС‰РµРЅРёСЏ
+  void MatrixMode(MATRIX_MODE matrix);//РІС‹Р±СЂР°С‚СЊ РјР°С‚СЂРёС†Сѓ
 
-  void Frustrum(float left,float right,float bottom,float top,float near,float far);//задать плоскости отсечения в матрицу проецирования
-  void SetViewport(float x,float y,float len,float hgt);//задать видовой порт
-  void Perspective(float fovy,float aspect,float near,float far);//задать матрицу проецирования
+  void Frustrum(float left,float right,float bottom,float top,float near,float far);//Р·Р°РґР°С‚СЊ РїР»РѕСЃРєРѕСЃС‚Рё РѕС‚СЃРµС‡РµРЅРёСЏ РІ РјР°С‚СЂРёС†Сѓ РїСЂРѕРµС†РёСЂРѕРІР°РЅРёСЏ
+  void SetViewport(float x,float y,float len,float hgt);//Р·Р°РґР°С‚СЊ РІРёРґРѕРІРѕР№ РїРѕСЂС‚
+  void Perspective(float fovy,float aspect,float near,float far);//Р·Р°РґР°С‚СЊ РјР°С‚СЂРёС†Сѓ РїСЂРѕРµС†РёСЂРѕРІР°РЅРёСЏ
 
-  void Color3f(float r,float g,float b);//задать цвет точки
-  void TexCoordf(float u,float v);//задать текстурные координаты точки
-  void Normal3f(float nx,float ny,float nz);//задать нормаль в точке
-  void Vertex3f(float x,float y,float z);//задать координату точки
-  void Begin(void);//начать рисование
-  void End(void);//закончить рисование
-  void ClearColor(float r,float g,float b);//задать цвет очистки фона
-  void Clear(uint32_t mode);//очистить буфер
-  void BindTexture(uint32_t width,uint32_t height,SGLRGBAByteColor *sGLRGBAByteColor_Ptr_Set);//задать текстуру
-  void Enable(ITEM_ID mode);//разрешить
-  void Disable(ITEM_ID mode);//запретить
-  void Lightfv(ITEM_ID light,PARAM_ID param,float *ptr);//задать параметры источника света
-  void Materialfv(PARAM_ID param,float *ptr);//задать параметры материала
+  void Color3f(float r,float g,float b);//Р·Р°РґР°С‚СЊ С†РІРµС‚ С‚РѕС‡РєРё
+  void TexCoordf(float u,float v);//Р·Р°РґР°С‚СЊ С‚РµРєСЃС‚СѓСЂРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ С‚РѕС‡РєРё
+  void Normal3f(float nx,float ny,float nz);//Р·Р°РґР°С‚СЊ РЅРѕСЂРјР°Р»СЊ РІ С‚РѕС‡РєРµ
+  void Vertex3f(float x,float y,float z);//Р·Р°РґР°С‚СЊ РєРѕРѕСЂРґРёРЅР°С‚Сѓ С‚РѕС‡РєРё
+  void Begin(void);//РЅР°С‡Р°С‚СЊ СЂРёСЃРѕРІР°РЅРёРµ
+  void End(void);//Р·Р°РєРѕРЅС‡РёС‚СЊ СЂРёСЃРѕРІР°РЅРёРµ
+  void ClearColor(float r,float g,float b);//Р·Р°РґР°С‚СЊ С†РІРµС‚ РѕС‡РёСЃС‚РєРё С„РѕРЅР°
+  void Clear(uint32_t mode);//РѕС‡РёСЃС‚РёС‚СЊ Р±СѓС„РµСЂ
+  void BindTexture(uint32_t width,uint32_t height,SGLRGBAByteColor *sGLRGBAByteColor_Ptr_Set);//Р·Р°РґР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ
+  void Enable(ITEM_ID mode);//СЂР°Р·СЂРµС€РёС‚СЊ
+  void Disable(ITEM_ID mode);//Р·Р°РїСЂРµС‚РёС‚СЊ
+  void Lightfv(ITEM_ID light,PARAM_ID param,float *ptr);//Р·Р°РґР°С‚СЊ РїР°СЂР°РјРµС‚СЂС‹ РёСЃС‚РѕС‡РЅРёРєР° СЃРІРµС‚Р°
+  void Materialfv(PARAM_ID param,float *ptr);//Р·Р°РґР°С‚СЊ РїР°СЂР°РјРµС‚СЂС‹ РјР°С‚РµСЂРёР°Р»Р°
 
-  //-статические функции--------------------------------------------------------------------------------
-  static void SetVertexCoord(SGLVertex &sGLVertex,float x,float y,float z);//задать координаты вершины
-  static void SetNormalCoord(SGLNormal &sGLNormal,float nx,float ny,float nz);//задать координаты нормали
-  static void SetTextureCoord(SGLTexture &sGLTexture,float u,float v);//задать координаты текстуры
-  static void SetColorValue(SGLColor &sGLColor,float r,float g,float b);//задать цвет
+  //-СЃС‚Р°С‚РёС‡РµСЃРєРёРµ С„СѓРЅРєС†РёРё--------------------------------------------------------------------------------
+  static void SetVertexCoord(SGLVertex &sGLVertex,float x,float y,float z);//Р·Р°РґР°С‚СЊ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµСЂС€РёРЅС‹
+  static void SetNormalCoord(SGLNormal &sGLNormal,float nx,float ny,float nz);//Р·Р°РґР°С‚СЊ РєРѕРѕСЂРґРёРЅР°С‚С‹ РЅРѕСЂРјР°Р»Рё
+  static void SetTextureCoord(SGLTexture &sGLTexture,float u,float v);//Р·Р°РґР°С‚СЊ РєРѕРѕСЂРґРёРЅР°С‚С‹ С‚РµРєСЃС‚СѓСЂС‹
+  static void SetColorValue(SGLColor &sGLColor,float r,float g,float b);//Р·Р°РґР°С‚СЊ С†РІРµС‚
  private:
-  //-закрытые функции-----------------------------------------------------------------------------------
-  void CreateLighColor(SGLNVCTPoint &sGLNVCTPoint);//вычислить цвет точки по источникам света
-  void CreateFrustrumPlane(void);//вычислить плоскости отсечения
-  void GetIntersectionPlaneAndLine(const SGLNVCTPoint& A,const SGLNVCTPoint& B,SGLNVCTPoint& new_point,float nx,float ny,float nz,float w);//получить точку пересечения прямой и плоскости
-  void Clip(const SGLNVCTPoint *point_array_input,uint16_t point_amount_input,SGLNVCTPoint *point_array_output,uint16_t &point_amount_output,float nx,float ny,float nz,float w);//выполнить коррекцию координат
+  //-Р·Р°РєСЂС‹С‚С‹Рµ С„СѓРЅРєС†РёРё-----------------------------------------------------------------------------------
+  void CreateLighColor(SGLNVCTPoint &sGLNVCTPoint);//РІС‹С‡РёСЃР»РёС‚СЊ С†РІРµС‚ С‚РѕС‡РєРё РїРѕ РёСЃС‚РѕС‡РЅРёРєР°Рј СЃРІРµС‚Р°
+  void CreateFrustrumPlane(void);//РІС‹С‡РёСЃР»РёС‚СЊ РїР»РѕСЃРєРѕСЃС‚Рё РѕС‚СЃРµС‡РµРЅРёСЏ
+  void GetIntersectionPlaneAndLine(const SGLNVCTPoint& A,const SGLNVCTPoint& B,SGLNVCTPoint& new_point,float nx,float ny,float nz,float w);//РїРѕР»СѓС‡РёС‚СЊ С‚РѕС‡РєСѓ РїРµСЂРµСЃРµС‡РµРЅРёСЏ РїСЂСЏРјРѕР№ Рё РїР»РѕСЃРєРѕСЃС‚Рё
+  void Clip(const SGLNVCTPoint *point_array_input,uint16_t point_amount_input,SGLNVCTPoint *point_array_output,uint16_t &point_amount_output,float nx,float ny,float nz,float w);//РІС‹РїРѕР»РЅРёС‚СЊ РєРѕСЂСЂРµРєС†РёСЋ РєРѕРѕСЂРґРёРЅР°С‚
 
-  void OutputTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C);//вывести треугольник
-  void DrawTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C);//отрисовка треугольника
-  void RenderTriangle(SGLNVCTPoint &a,SGLNVCTPoint &b,SGLNVCTPoint &c,SGLScreenPoint &ap,SGLScreenPoint &bp,SGLScreenPoint &cp);//растеризация треугольника на экране
-  void DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,const SGLNCTPoint &sGLNCTPoint_1,const SGLNCTPoint &sGLNCTPoint_2);//отрисовка текстурированной горизонтальной линии
+  void OutputTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C);//РІС‹РІРµСЃС‚Рё С‚СЂРµСѓРіРѕР»СЊРЅРёРє
+  void DrawTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C);//РѕС‚СЂРёСЃРѕРІРєР° С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°
+  void RenderTriangle(SGLNVCTPoint &a,SGLNVCTPoint &b,SGLNVCTPoint &c,SGLScreenPoint &ap,SGLScreenPoint &bp,SGLScreenPoint &cp);//СЂР°СЃС‚РµСЂРёР·Р°С†РёСЏ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР° РЅР° СЌРєСЂР°РЅРµ
+  void DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,const SGLNCTPoint &sGLNCTPoint_1,const SGLNCTPoint &sGLNCTPoint_2);//РѕС‚СЂРёСЃРѕРІРєР° С‚РµРєСЃС‚СѓСЂРёСЂРѕРІР°РЅРЅРѕР№ РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕР№ Р»РёРЅРёРё
 };
 
 #endif

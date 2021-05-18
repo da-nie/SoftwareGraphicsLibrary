@@ -1,12 +1,12 @@
 //====================================================================================================
-//подключаемые библиотеки
+//РїРѕРґРєР»СЋС‡Р°РµРјС‹Рµ Р±РёР±Р»РёРѕС‚РµРєРё
 //====================================================================================================
 #include "tga.h"
 #include "craiifilein.h"
 #include "craiifileout.h"
 
 //====================================================================================================
-//глобальные переменные
+//РіР»РѕР±Р°Р»СЊРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 //====================================================================================================
 static const uint32_t TGA_IMAGE_TYPE_NO_IMAGE=0;
 static const uint32_t TGA_IMAGE_TYPE_PALETTE=1;
@@ -22,37 +22,37 @@ static const uint32_t TGA_COLOR_MAP_NO_PALETTE=0;
 static const uint32_t TGA_COLOR_MAP_PALETTE=1;
 
 //====================================================================================================
-//функции
+//С„СѓРЅРєС†РёРё
 //====================================================================================================
 
 //----------------------------------------------------------------------------------------------------
-//получение изображения
+//РїРѕР»СѓС‡РµРЅРёРµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
 //----------------------------------------------------------------------------------------------------
 static uint8_t *GetTGAImage(uint8_t *data_ptr,uint32_t length,int32_t &width,int32_t &height)
 {
- //пробуем считать изображение
+ //РїСЂРѕР±СѓРµРј СЃС‡РёС‚Р°С‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
  STGAHeader sTGAHeader;
- //читаем заголовок
- if (length<sizeof(STGAHeader)) return(NULL);//ошибка - мало данных
+ //С‡РёС‚Р°РµРј Р·Р°РіРѕР»РѕРІРѕРє
+ if (length<sizeof(STGAHeader)) return(NULL);//РѕС€РёР±РєР° - РјР°Р»Рѕ РґР°РЅРЅС‹С…
  memcpy(&sTGAHeader,data_ptr,sizeof(STGAHeader));
- //проверяем на возможность чтения
- if (sTGAHeader.imageType&TGA_IMAGE_TYPE_RLE_MASK) return(NULL);//RLE не поддерживаем
- if ((sTGAHeader.imageType&TGA_IMAGE_TYPE_MASK)==TGA_IMAGE_TYPE_NO_IMAGE || (sTGAHeader.imageType&TGA_IMAGE_TYPE_MASK)==TGA_IMAGE_TYPE_GRAYSCALE) return(NULL);//градации серого и отсутствие изображения не поддерживаем
- //задаём параметры изображения
+ //РїСЂРѕРІРµСЂСЏРµРј РЅР° РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ С‡С‚РµРЅРёСЏ
+ if (sTGAHeader.imageType&TGA_IMAGE_TYPE_RLE_MASK) return(NULL);//RLE РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµРј
+ if ((sTGAHeader.imageType&TGA_IMAGE_TYPE_MASK)==TGA_IMAGE_TYPE_NO_IMAGE || (sTGAHeader.imageType&TGA_IMAGE_TYPE_MASK)==TGA_IMAGE_TYPE_GRAYSCALE) return(NULL);//РіСЂР°РґР°С†РёРё СЃРµСЂРѕРіРѕ Рё РѕС‚СЃСѓС‚СЃС‚РІРёРµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµРј
+ //Р·Р°РґР°С‘Рј РїР°СЂР°РјРµС‚СЂС‹ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
  width=sTGAHeader.width;
  height=sTGAHeader.height;
  int32_t line_length=sTGAHeader.width*sizeof(uint32_t);
- //выделяем память для изображения
+ //РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РґР»СЏ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
  int32_t image_length=sTGAHeader.width*sTGAHeader.height*sTGAHeader.bits/8;
- //считываем изображение
+ //СЃС‡РёС‚С‹РІР°РµРј РёР·РѕР±СЂР°Р¶РµРЅРёРµ
  uint32_t image_offset=sizeof(struct STGAHeader)+sTGAHeader.colorMapStart+sTGAHeader.colorMapLength*sTGAHeader.colorMapBits/8+sTGAHeader.identsize;
- if (image_offset+image_length>length) return(NULL);//недостаточно данных
- //а теперь анализируем формат
- if (sTGAHeader.bits==24)//BGR - модицифируем для четвёрок байт
+ if (image_offset+image_length>length) return(NULL);//РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РґР°РЅРЅС‹С…
+ //Р° С‚РµРїРµСЂСЊ Р°РЅР°Р»РёР·РёСЂСѓРµРј С„РѕСЂРјР°С‚
+ if (sTGAHeader.bits==24)//BGR - РјРѕРґРёС†РёС„РёСЂСѓРµРј РґР»СЏ С‡РµС‚РІС‘СЂРѕРє Р±Р°Р№С‚
  {
   uint8_t *out_image=new uint8_t[sTGAHeader.width*sTGAHeader.height*sizeof(uint32_t)];
   int32_t y,x;
-  if (sTGAHeader.descriptor==TGA_DESCRIPTOR_FORWARD)//прямой формат
+  if (sTGAHeader.descriptor==TGA_DESCRIPTOR_FORWARD)//РїСЂСЏРјРѕР№ С„РѕСЂРјР°С‚
   {
    uint8_t *oi_ptr=out_image;
    uint8_t *i_ptr=data_ptr+image_offset;
@@ -72,7 +72,7 @@ static uint8_t *GetTGAImage(uint8_t *data_ptr,uint32_t length,int32_t &width,int
     }
    }
   }
-  if (sTGAHeader.descriptor==TGA_DESCRIPTOR_REVERSE)//обратный формат
+  if (sTGAHeader.descriptor==TGA_DESCRIPTOR_REVERSE)//РѕР±СЂР°С‚РЅС‹Р№ С„РѕСЂРјР°С‚
   {
    uint8_t *oi_ptr=out_image;
    uint8_t *i_ptr=data_ptr+image_offset+sTGAHeader.width*sTGAHeader.height*3-1;
@@ -95,11 +95,11 @@ static uint8_t *GetTGAImage(uint8_t *data_ptr,uint32_t length,int32_t &width,int
   return(out_image);
  }
 
- if (sTGAHeader.bits==32)//BGR - модицифируем для четвёрок байт
+ if (sTGAHeader.bits==32)//BGR - РјРѕРґРёС†РёС„РёСЂСѓРµРј РґР»СЏ С‡РµС‚РІС‘СЂРѕРє Р±Р°Р№С‚
  {
   uint8_t *out_image=new uint8_t[sTGAHeader.width*sTGAHeader.height*sizeof(uint32_t)];
   int32_t y,x;
-  if (sTGAHeader.descriptor==TGA_DESCRIPTOR_FORWARD)//прямой формат
+  if (sTGAHeader.descriptor==TGA_DESCRIPTOR_FORWARD)//РїСЂСЏРјРѕР№ С„РѕСЂРјР°С‚
   {
    uint8_t *oi_ptr=out_image;
    uint8_t *i_ptr=data_ptr+image_offset;
@@ -119,7 +119,7 @@ static uint8_t *GetTGAImage(uint8_t *data_ptr,uint32_t length,int32_t &width,int
     }
    }
   }
-  if (sTGAHeader.descriptor==TGA_DESCRIPTOR_REVERSE)//обратный формат
+  if (sTGAHeader.descriptor==TGA_DESCRIPTOR_REVERSE)//РѕР±СЂР°С‚РЅС‹Р№ С„РѕСЂРјР°С‚
   {
    uint8_t *oi_ptr=out_image;
    uint8_t *i_ptr=data_ptr+image_offset+sTGAHeader.width*sTGAHeader.height*3-1;
@@ -142,15 +142,15 @@ static uint8_t *GetTGAImage(uint8_t *data_ptr,uint32_t length,int32_t &width,int
   return(out_image);
  }
 
- if (sTGAHeader.colorMapType==TGA_COLOR_MAP_PALETTE && sTGAHeader.colorMapBits/8==3)//есть палитра по 24 бита (другую палитру не поддерживаем)
+ if (sTGAHeader.colorMapType==TGA_COLOR_MAP_PALETTE && sTGAHeader.colorMapBits/8==3)//РµСЃС‚СЊ РїР°Р»РёС‚СЂР° РїРѕ 24 Р±РёС‚Р° (РґСЂСѓРіСѓСЋ РїР°Р»РёС‚СЂСѓ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµРј)
  {
   uint32_t palette_offset=sizeof(STGAHeader)+sTGAHeader.colorMapStart+sTGAHeader.identsize;
-  if (palette_offset+sTGAHeader.colorMapLength*3>length) return(NULL);//не хватает данных
+  if (palette_offset+sTGAHeader.colorMapLength*3>length) return(NULL);//РЅРµ С…РІР°С‚Р°РµС‚ РґР°РЅРЅС‹С…
   uint8_t *color_map=data_ptr+palette_offset;
-  //нам потребуется изменить формат
+  //РЅР°Рј РїРѕС‚СЂРµР±СѓРµС‚СЃСЏ РёР·РјРµРЅРёС‚СЊ С„РѕСЂРјР°С‚
   uint8_t *out_image=new uint8_t[sTGAHeader.width*sTGAHeader.height*sizeof(uint32_t)];
   int32_t y,x;
-  if (sTGAHeader.descriptor==TGA_DESCRIPTOR_FORWARD)//прямой формат
+  if (sTGAHeader.descriptor==TGA_DESCRIPTOR_FORWARD)//РїСЂСЏРјРѕР№ С„РѕСЂРјР°С‚
   {
    uint8_t *oi_ptr=out_image;
    uint8_t *i_ptr=data_ptr+image_offset;
@@ -171,7 +171,7 @@ static uint8_t *GetTGAImage(uint8_t *data_ptr,uint32_t length,int32_t &width,int
     }
    }
   }
-  if (sTGAHeader.descriptor==TGA_DESCRIPTOR_REVERSE)//формат перевёрнутый
+  if (sTGAHeader.descriptor==TGA_DESCRIPTOR_REVERSE)//С„РѕСЂРјР°С‚ РїРµСЂРµРІС‘СЂРЅСѓС‚С‹Р№
   {
    uint8_t *oi_ptr=out_image;
    uint8_t *i_ptr=data_ptr+image_offset+sTGAHeader.width*(sTGAHeader.height-1);
@@ -194,24 +194,24 @@ static uint8_t *GetTGAImage(uint8_t *data_ptr,uint32_t length,int32_t &width,int
   }
   return(out_image);
  }
- //иные режимы не поддерживаем
+ //РёРЅС‹Рµ СЂРµР¶РёРјС‹ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµРј
  return(NULL);
 }
 
 
 //----------------------------------------------------------------------------------------------------
-//загрузить tga-файл
+//Р·Р°РіСЂСѓР·РёС‚СЊ tga-С„Р°Р№Р»
 //----------------------------------------------------------------------------------------------------
 uint8_t *LoadTGAFromFile(const char *file_name,int32_t &width,int32_t &height)
 {
  CRAIIFileIn cRAIIFileIn(file_name,std::ios_base::in|std::ios_base::binary);
  {
   if (cRAIIFileIn.IsOpened()==false) return(NULL);
-  //узнаем размер файла
+  //СѓР·РЅР°РµРј СЂР°Р·РјРµСЂ С„Р°Р№Р»Р°
   cRAIIFileIn.GetHandle().seekg(0,std::ios_base::end);
   uint32_t file_size=static_cast<uint32_t>(cRAIIFileIn.GetHandle().tellg());
   cRAIIFileIn.GetHandle().seekg(0,std::ios_base::beg);
-  //читаем файл
+  //С‡РёС‚Р°РµРј С„Р°Р№Р»
   uint8_t *data_ptr=new uint8_t[file_size+1];
   if (cRAIIFileIn.GetHandle().read(reinterpret_cast<char*>(data_ptr),sizeof(uint8_t)*file_size).fail()==false)
   {
@@ -225,7 +225,7 @@ uint8_t *LoadTGAFromFile(const char *file_name,int32_t &width,int32_t &height)
 }
 
 //----------------------------------------------------------------------------------------------------
-//загрузить tga-файл из ресурсов
+//Р·Р°РіСЂСѓР·РёС‚СЊ tga-С„Р°Р№Р» РёР· СЂРµСЃСѓСЂСЃРѕРІ
 //----------------------------------------------------------------------------------------------------
 uint8_t *LoadTGAFromResource(HMODULE hModule,int32_t id,int32_t &width,int32_t &height)
 {
@@ -235,13 +235,13 @@ uint8_t *LoadTGAFromResource(HMODULE hModule,int32_t id,int32_t &width,int32_t &
  if (hGlobal==NULL) return(NULL);
  uint8_t *data_ptr=(uint8_t*)LockResource(hGlobal);
  uint32_t data_size=SizeofResource(hModule,hRSRC);
- //читаем данные
+ //С‡РёС‚Р°РµРј РґР°РЅРЅС‹Рµ
  uint8_t *ret=GetTGAImage(data_ptr,data_size,width,height);
  GlobalUnlock(hGlobal);
  return(ret);
 }
 //----------------------------------------------------------------------------------------------------
-//сохранить картинку в tga-файл
+//СЃРѕС…СЂР°РЅРёС‚СЊ РєР°СЂС‚РёРЅРєСѓ РІ tga-С„Р°Р№Р»
 //----------------------------------------------------------------------------------------------------
 bool SaveTGA(const char *file_name,int32_t width,int32_t height,uint8_t *image)
 {
