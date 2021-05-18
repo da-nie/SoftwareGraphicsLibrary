@@ -2,19 +2,19 @@
 #define SGL_MATRIX_H
 
 //****************************************************************************************************
-//операции с матрицам для программной растеризации
+//РѕРїРµСЂР°С†РёРё СЃ РјР°С‚СЂРёС†Р°Рј РґР»СЏ РїСЂРѕРіСЂР°РјРјРЅРѕР№ СЂР°СЃС‚РµСЂРёР·Р°С†РёРё
 //****************************************************************************************************
 
 //****************************************************************************************************
-//подключаемые библиотеки
+//РїРѕРґРєР»СЋС‡Р°РµРјС‹Рµ Р±РёР±Р»РёРѕС‚РµРєРё
 //****************************************************************************************************
 #include <stdint.h>
 
 //****************************************************************************************************
-//структуры
+//СЃС‚СЂСѓРєС‚СѓСЂС‹
 //****************************************************************************************************
 
-//вектор 4
+//РІРµРєС‚РѕСЂ 4
 struct SGLVector4
 {
  float X;
@@ -22,14 +22,14 @@ struct SGLVector4
  float Z;
  float W;
 };
-//вектор 3
+//РІРµРєС‚РѕСЂ 3
 struct SGLVector3
 {
  float X;
  float Y;
  float Z;
 };
-//матрица 4x4
+//РјР°С‚СЂРёС†Р° 4x4
 struct SGLMatrix4
 {
  SGLVector4 X;
@@ -37,7 +37,7 @@ struct SGLMatrix4
  SGLVector4 Z;
  SGLVector4 W;
 };
-//матрица 3x3
+//РјР°С‚СЂРёС†Р° 3x3
 struct SGLMatrix3
 {
  SGLVector3 X;
@@ -47,17 +47,17 @@ struct SGLMatrix3
 
 
 //****************************************************************************************************
-//прототипы функций
+//РїСЂРѕС‚РѕС‚РёРїС‹ С„СѓРЅРєС†РёР№
 //****************************************************************************************************
 
-void MultiplySGLVector4ToSGLMatrix4(const SGLVector4& v,const SGLMatrix4& m,SGLVector4& v_out);//умножение вектора типа SGLVector4 на матрицу типа SGLMatrix4
-void MultiplySGLMatrix4ToSGLVector4(const SGLMatrix4& m,const SGLVector4& v,SGLVector4& v_out);//умножение матрицы типа SGLMatrix4 на вектор типа SGLVector4
-void MultiplySGLMatrix4(const SGLMatrix4& a,const SGLMatrix4& b,SGLMatrix4& out);//умножение двух матриц типа SGLMatrix4
-double GetNorma(SGLVector4& v);//получить норму вектора типа SGLVector4
-void NormaliseSGLVector4(SGLVector4& v);//нормирование вектора типа SGLVector4
-double GetDeterminantSGLMatrix4(const SGLMatrix4& matrix);//вычислить определитель матрицы типа SGLMatrix4
-double GetDeterminantSGLMatrix3(const SGLMatrix3& matrix);//вычислить определитель матрицы типа SGLMatrix3
-void GetTruncatedMatrixSGLMatrix4(long y,long x,const SGLMatrix4& input_matrix,SGLMatrix3& output_matrix);//вычислить матрицу с исключённой строкой и столбцом по координатам y и x для матрицы типа SGLMatrix4
-bool CreateInvertMatrixSGLMatrix4(const SGLMatrix4& input_matrix,SGLMatrix4& output_matrix);//вычислить обратную матрицу для матрицы типа SGLMatrix4
+void MultiplySGLVector4ToSGLMatrix4(const SGLVector4& v,const SGLMatrix4& m,SGLVector4& v_out);//СѓРјРЅРѕР¶РµРЅРёРµ РІРµРєС‚РѕСЂР° С‚РёРїР° SGLVector4 РЅР° РјР°С‚СЂРёС†Сѓ С‚РёРїР° SGLMatrix4
+void MultiplySGLMatrix4ToSGLVector4(const SGLMatrix4& m,const SGLVector4& v,SGLVector4& v_out);//СѓРјРЅРѕР¶РµРЅРёРµ РјР°С‚СЂРёС†С‹ С‚РёРїР° SGLMatrix4 РЅР° РІРµРєС‚РѕСЂ С‚РёРїР° SGLVector4
+void MultiplySGLMatrix4(const SGLMatrix4& a,const SGLMatrix4& b,SGLMatrix4& out);//СѓРјРЅРѕР¶РµРЅРёРµ РґРІСѓС… РјР°С‚СЂРёС† С‚РёРїР° SGLMatrix4
+double GetNorma(SGLVector4& v);//РїРѕР»СѓС‡РёС‚СЊ РЅРѕСЂРјСѓ РІРµРєС‚РѕСЂР° С‚РёРїР° SGLVector4
+void NormaliseSGLVector4(SGLVector4& v);//РЅРѕСЂРјРёСЂРѕРІР°РЅРёРµ РІРµРєС‚РѕСЂР° С‚РёРїР° SGLVector4
+double GetDeterminantSGLMatrix4(const SGLMatrix4& matrix);//РІС‹С‡РёСЃР»РёС‚СЊ РѕРїСЂРµРґРµР»РёС‚РµР»СЊ РјР°С‚СЂРёС†С‹ С‚РёРїР° SGLMatrix4
+double GetDeterminantSGLMatrix3(const SGLMatrix3& matrix);//РІС‹С‡РёСЃР»РёС‚СЊ РѕРїСЂРµРґРµР»РёС‚РµР»СЊ РјР°С‚СЂРёС†С‹ С‚РёРїР° SGLMatrix3
+void GetTruncatedMatrixSGLMatrix4(long y,long x,const SGLMatrix4& input_matrix,SGLMatrix3& output_matrix);//РІС‹С‡РёСЃР»РёС‚СЊ РјР°С‚СЂРёС†Сѓ СЃ РёСЃРєР»СЋС‡С‘РЅРЅРѕР№ СЃС‚СЂРѕРєРѕР№ Рё СЃС‚РѕР»Р±С†РѕРј РїРѕ РєРѕРѕСЂРґРёРЅР°С‚Р°Рј y Рё x РґР»СЏ РјР°С‚СЂРёС†С‹ С‚РёРїР° SGLMatrix4
+bool CreateInvertMatrixSGLMatrix4(const SGLMatrix4& input_matrix,SGLMatrix4& output_matrix);//РІС‹С‡РёСЃР»РёС‚СЊ РѕР±СЂР°С‚РЅСѓСЋ РјР°С‚СЂРёС†Сѓ РґР»СЏ РјР°С‚СЂРёС†С‹ С‚РёРїР° SGLMatrix4
 
 #endif

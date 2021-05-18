@@ -1,14 +1,14 @@
 #include "cwnd_main.h"
 #include "tga.h"
 
-//-Функции обработки сообщений класса----------------------------------------
+//-Р¤СѓРЅРєС†РёРё РѕР±СЂР°Р±РѕС‚РєРё СЃРѕРѕР±С‰РµРЅРёР№ РєР»Р°СЃСЃР°----------------------------------------
 BEGIN_MESSAGE_MAP(CWnd_Main,CWnd)
  ON_WM_CREATE()
  ON_WM_DESTROY()
  ON_WM_PAINT()
  ON_WM_TIMER()
 END_MESSAGE_MAP()
-//-Конструктор класса--------------------------------------------------------
+//-РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР°--------------------------------------------------------
 CWnd_Main::CWnd_Main(void)
 {
  cSGL.Init(640,480);
@@ -19,11 +19,11 @@ CWnd_Main::CWnd_Main(void)
  Texture_Ptr.reset(LoadTGAFromFile("texture.tga",width,height));
  cSGL.BindTexture(width,height,reinterpret_cast<SGLRGBAByteColor*>(Texture_Ptr.get()));
 }
-//-Деструктор класса---------------------------------------------------------
+//-Р”РµСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР°---------------------------------------------------------
 CWnd_Main::~CWnd_Main()
 {
 }
-//-Функции класса------------------------------------------------------------
+//-Р¤СѓРЅРєС†РёРё РєР»Р°СЃСЃР°------------------------------------------------------------
 void CWnd_Main::VectorProduct(float *xv1,float *yv1,float *zv1,float xv2,float yv2,float zv2)
 {
  float x1=*xv1;
@@ -36,12 +36,12 @@ void CWnd_Main::VectorProduct(float *xv1,float *yv1,float *zv1,float xv2,float y
  float yn=-(x1*z2-z1*x2);
  float zn=x1*y2-y1*x2;
  float len=sqrtf(xn*xn+yn*yn+zn*zn);
- if (len!=0)
- {
-  xn=xn/len;
-  yn=yn/len;
-  zn=zn/len;
- }
+ float inv_len = (len != 0.0f) ? 1.0f / len : 0.0f;
+
+ xn *= inv_len;
+ yn *= inv_len;
+ zn *= inv_len;
+
  *xv1=xn;
  *yv1=yn;
  *zv1=zn;
@@ -188,7 +188,7 @@ void CWnd_Main::Octahedron(float height)
   cSGL.End();
   //========================================
 }
-//-Функции обработки сообщений класса----------------------------------------
+//-Р¤СѓРЅРєС†РёРё РѕР±СЂР°Р±РѕС‚РєРё СЃРѕРѕР±С‰РµРЅРёР№ РєР»Р°СЃСЃР°----------------------------------------
 int CWnd_Main::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
  angle=0;
@@ -238,7 +238,7 @@ afx_msg void CWnd_Main::OnPaint(void)
  cSGL.Materialfv(CSGL::SGL_SPECULAR,m0_specular); 
  cSGL.Materialfv(CSGL::SGL_EMISSION,m0_emission);
  
- //нарисуем фигуру
+ //РЅР°СЂРёСЃСѓРµРј С„РёРіСѓСЂСѓ
  Octahedron(10);
  
   cSGL.Begin();
@@ -256,7 +256,7 @@ afx_msg void CWnd_Main::OnPaint(void)
    cSGL.Vertex3f(10,10,0);
   cSGL.End();
   
- //выведем картинку на экран
+ //РІС‹РІРµРґРµРј РєР°СЂС‚РёРЅРєСѓ РЅР° СЌРєСЂР°РЅ
  CPaintDC dc(this);
 
  BITMAPINFOHEADER bmih;
@@ -286,5 +286,5 @@ afx_msg void CWnd_Main::OnTimer(UINT nIDEvent)
  }
  else CWnd::OnTimer(nIDEvent);
 }
-//-Прочее--------------------------------------------------------------------
+//-РџСЂРѕС‡РµРµ--------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 //****************************************************************************************************
-//подключаемые библиотеки
+//РїРѕРґРєР»СЋС‡Р°РµРјС‹Рµ Р±РёР±Р»РёРѕС‚РµРєРё
 //****************************************************************************************************
 #include "csgl.h"
 #include <math.h>
@@ -7,24 +7,24 @@
 #include <string.h>
 
 //****************************************************************************************************
-//глобальные переменные
+//РіР»РѕР±Р°Р»СЊРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 //****************************************************************************************************
 
 //****************************************************************************************************
-//константы
+//РєРѕРЅСЃС‚Р°РЅС‚С‹
 //****************************************************************************************************
 static const float PI=3.1415926535897932384626433832795f;
 
 //****************************************************************************************************
-//макроопределения
+//РјР°РєСЂРѕРѕРїСЂРµРґРµР»РµРЅРёСЏ
 //****************************************************************************************************
 
 //****************************************************************************************************
-//конструктор и деструктор
+//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Рё РґРµСЃС‚СЂСѓРєС‚РѕСЂ
 //****************************************************************************************************
 
 //----------------------------------------------------------------------------------------------------
-//конструктор
+//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 //----------------------------------------------------------------------------------------------------
 CSGL::CSGL(void)
 {
@@ -72,7 +72,7 @@ CSGL::CSGL(void)
  }
 }
 //----------------------------------------------------------------------------------------------------
-//деструктор
+//РґРµСЃС‚СЂСѓРєС‚РѕСЂ
 //----------------------------------------------------------------------------------------------------
 CSGL::~CSGL()
 {
@@ -81,11 +81,11 @@ CSGL::~CSGL()
 }
 
 //****************************************************************************************************
-//закрытые функции
+//Р·Р°РєСЂС‹С‚С‹Рµ С„СѓРЅРєС†РёРё
 //****************************************************************************************************
 
 //----------------------------------------------------------------------------------------------------
-//вычислить цвет точки по источникам света
+//РІС‹С‡РёСЃР»РёС‚СЊ С†РІРµС‚ С‚РѕС‡РєРё РїРѕ РёСЃС‚РѕС‡РЅРёРєР°Рј СЃРІРµС‚Р°
 //----------------------------------------------------------------------------------------------------
 void CSGL::CreateLighColor(SGLNVCTPoint &sGLNVCTPoint)
 { 
@@ -96,7 +96,7 @@ void CSGL::CreateLighColor(SGLNVCTPoint &sGLNVCTPoint)
  {
   SLight *sLight_Ptr=&sLight[n];
   if (sLight_Ptr->Enabled==false) continue;
-  //вычислим расстояние между источником и точкой
+  //РІС‹С‡РёСЃР»РёРј СЂР°СЃСЃС‚РѕСЏРЅРёРµ РјРµР¶РґСѓ РёСЃС‚РѕС‡РЅРёРєРѕРј Рё С‚РѕС‡РєРѕР№
   SGLVector4 sGLVector4_Distance;
   sGLVector4_Distance.X=sLight_Ptr->sGLVertex.X-sGLNVCTPoint.sGLVertex.X;
   sGLVector4_Distance.Y=sLight_Ptr->sGLVertex.Y-sGLNVCTPoint.sGLVertex.Y;
@@ -104,14 +104,14 @@ void CSGL::CreateLighColor(SGLNVCTPoint &sGLNVCTPoint)
   sGLVector4_Distance.W=1.0f;
   float dist=GetNorma(sGLVector4_Distance);
   NormaliseSGLVector4(sGLVector4_Distance);
-  //определим затухание от расстояния
+  //РѕРїСЂРµРґРµР»РёРј Р·Р°С‚СѓС…Р°РЅРёРµ РѕС‚ СЂР°СЃСЃС‚РѕСЏРЅРёСЏ
   float k=sLight_Ptr->ConstantAttenuation+sLight_Ptr->LinearAttenuation*dist+sLight_Ptr->QuadraticAttenuation*dist*dist;
   k=1.0f/k;
-  //определим скалярное произведение между нормалью к точке и вектором к источнику света
+  //РѕРїСЂРµРґРµР»РёРј СЃРєР°Р»СЏСЂРЅРѕРµ РїСЂРѕРёР·РІРµРґРµРЅРёРµ РјРµР¶РґСѓ РЅРѕСЂРјР°Р»СЊСЋ Рє С‚РѕС‡РєРµ Рё РІРµРєС‚РѕСЂРѕРј Рє РёСЃС‚РѕС‡РЅРёРєСѓ СЃРІРµС‚Р°
   float scalar=sGLVector4_Distance.X*sGLNVCTPoint.sGLNormal.Nx+sGLVector4_Distance.Y*sGLNVCTPoint.sGLNormal.Ny+sGLVector4_Distance.Z*sGLNVCTPoint.sGLNormal.Nz;
-  if (scalar<0) scalar=-scalar;//вершина с другой стороны от источника света, но мы считаем одинаково (так удобнее) 
+  if (scalar<0) scalar=-scalar;//РІРµСЂС€РёРЅР° СЃ РґСЂСѓРіРѕР№ СЃС‚РѕСЂРѕРЅС‹ РѕС‚ РёСЃС‚РѕС‡РЅРёРєР° СЃРІРµС‚Р°, РЅРѕ РјС‹ СЃС‡РёС‚Р°РµРј РѕРґРёРЅР°РєРѕРІРѕ (С‚Р°Рє СѓРґРѕР±РЅРµРµ) 
   float scalar_sh=pow(scalar,sLight_Ptr->Shininess);
-  //вычисляем освещённость
+  //РІС‹С‡РёСЃР»СЏРµРј РѕСЃРІРµС‰С‘РЅРЅРѕСЃС‚СЊ
   SGLColor sGLColor_Local;
   float ar=sGLNVCTPoint.sGLMaterial.SGLColor_Ambient.R*sLight_Ptr->SGLColor_Ambient.R;
   float dr=sGLNVCTPoint.sGLMaterial.SGLColor_Diffuse.R*sLight_Ptr->SGLColor_Diffuse.R;
@@ -142,49 +142,49 @@ void CSGL::CreateLighColor(SGLNVCTPoint &sGLNVCTPoint)
  if (sGLNVCTPoint.sGLColor.B<0) sGLNVCTPoint.sGLColor.B=0;
 }
 //----------------------------------------------------------------------------------------------------
-//вычислить плоскости отсечения
+//РІС‹С‡РёСЃР»РёС‚СЊ РїР»РѕСЃРєРѕСЃС‚Рё РѕС‚СЃРµС‡РµРЅРёСЏ
 //----------------------------------------------------------------------------------------------------
 void CSGL::CreateFrustrumPlane(void)
 {
- //вычисляем общую матрицу modelview-projection
- //ВНИМАНИЕ!!!
- //так как координаты в буфере (Vertex3f) уже переведены с учётом матрицы моделирования, строить плоскости нужно только по матрице проецирования!
- //ВНИМАНИЕ!!!
+ //РІС‹С‡РёСЃР»СЏРµРј РѕР±С‰СѓСЋ РјР°С‚СЂРёС†Сѓ modelview-projection
+ //Р’РќРРњРђРќРР•!!!
+ //С‚Р°Рє РєР°Рє РєРѕРѕСЂРґРёРЅР°С‚С‹ РІ Р±СѓС„РµСЂРµ (Vertex3f) СѓР¶Рµ РїРµСЂРµРІРµРґРµРЅС‹ СЃ СѓС‡С‘С‚РѕРј РјР°С‚СЂРёС†С‹ РјРѕРґРµР»РёСЂРѕРІР°РЅРёСЏ, СЃС‚СЂРѕРёС‚СЊ РїР»РѕСЃРєРѕСЃС‚Рё РЅСѓР¶РЅРѕ С‚РѕР»СЊРєРѕ РїРѕ РјР°С‚СЂРёС†Рµ РїСЂРѕРµС†РёСЂРѕРІР°РЅРёСЏ!
+ //Р’РќРРњРђРќРР•!!!
 
  SGLMatrix4 projection_model_view_matrix=ProjectionMatrix;
- //вычисляем четыре плоскости отсечения по проекции (верх, низ, лево, право)
- //левая
+ //РІС‹С‡РёСЃР»СЏРµРј С‡РµС‚С‹СЂРµ РїР»РѕСЃРєРѕСЃС‚Рё РѕС‚СЃРµС‡РµРЅРёСЏ РїРѕ РїСЂРѕРµРєС†РёРё (РІРµСЂС…, РЅРёР·, Р»РµРІРѕ, РїСЂР°РІРѕ)
+ //Р»РµРІР°СЏ
  FrustumPlane[0].X=projection_model_view_matrix.X.W+projection_model_view_matrix.X.X;
  FrustumPlane[0].Y=projection_model_view_matrix.Y.W+projection_model_view_matrix.Y.X;
  FrustumPlane[0].Z=projection_model_view_matrix.Z.W+projection_model_view_matrix.Z.X;
  FrustumPlane[0].W=projection_model_view_matrix.W.W+projection_model_view_matrix.W.X;
  NormaliseSGLVector4(FrustumPlane[0]);
- //правая
+ //РїСЂР°РІР°СЏ
  FrustumPlane[1].X=projection_model_view_matrix.X.W-projection_model_view_matrix.X.X;
  FrustumPlane[1].Y=projection_model_view_matrix.Y.W-projection_model_view_matrix.Y.X;
  FrustumPlane[1].Z=projection_model_view_matrix.Z.W-projection_model_view_matrix.Z.X;
  FrustumPlane[1].W=projection_model_view_matrix.W.W-projection_model_view_matrix.W.X;
  NormaliseSGLVector4(FrustumPlane[1]);
- //верхняя
+ //РІРµСЂС…РЅСЏСЏ
  FrustumPlane[2].X=projection_model_view_matrix.X.W-projection_model_view_matrix.X.Y;
  FrustumPlane[2].Y=projection_model_view_matrix.Y.W-projection_model_view_matrix.Y.Y;
  FrustumPlane[2].Z=projection_model_view_matrix.Z.W-projection_model_view_matrix.Z.Y;
  FrustumPlane[2].W=projection_model_view_matrix.W.W-projection_model_view_matrix.W.Y;
  NormaliseSGLVector4(FrustumPlane[2]);
- //нижняя
+ //РЅРёР¶РЅСЏСЏ
  FrustumPlane[3].X=projection_model_view_matrix.X.W+projection_model_view_matrix.X.Y;
  FrustumPlane[3].Y=projection_model_view_matrix.Y.W+projection_model_view_matrix.Y.Y;
  FrustumPlane[3].Z=projection_model_view_matrix.Z.W+projection_model_view_matrix.Z.Y;
  FrustumPlane[3].W=projection_model_view_matrix.W.W+projection_model_view_matrix.W.Y;
  NormaliseSGLVector4(FrustumPlane[3]);
- //передняя
+ //РїРµСЂРµРґРЅСЏСЏ
  FrustumPlane[4].X=projection_model_view_matrix.X.W+projection_model_view_matrix.X.Z;
  FrustumPlane[4].Y=projection_model_view_matrix.Y.W+projection_model_view_matrix.Y.Z;
  FrustumPlane[4].Z=projection_model_view_matrix.Z.W+projection_model_view_matrix.Z.Z;
  FrustumPlane[4].W=projection_model_view_matrix.W.W+projection_model_view_matrix.W.Z;
  NormaliseSGLVector4(FrustumPlane[4]);
 
- //задняя
+ //Р·Р°РґРЅСЏСЏ
  FrustumPlane[5].X=projection_model_view_matrix.X.W-projection_model_view_matrix.X.Z;
  FrustumPlane[5].Y=projection_model_view_matrix.Y.W-projection_model_view_matrix.Y.Z;
  FrustumPlane[5].Z=projection_model_view_matrix.Z.W-projection_model_view_matrix.Z.Z;
@@ -193,7 +193,7 @@ void CSGL::CreateFrustrumPlane(void)
 
 }
 //----------------------------------------------------------------------------------------------------
-//получить точку пересечения прямой и плоскости
+//РїРѕР»СѓС‡РёС‚СЊ С‚РѕС‡РєСѓ РїРµСЂРµСЃРµС‡РµРЅРёСЏ РїСЂСЏРјРѕР№ Рё РїР»РѕСЃРєРѕСЃС‚Рё
 //----------------------------------------------------------------------------------------------------
 void CSGL::GetIntersectionPlaneAndLine(const SGLNVCTPoint& A,const SGLNVCTPoint& B,SGLNVCTPoint& new_point,float nx,float ny,float nz,float w)
 {
@@ -237,14 +237,14 @@ void CSGL::GetIntersectionPlaneAndLine(const SGLNVCTPoint& A,const SGLNVCTPoint&
  float r=ar+time*dr;
  float g=ag+time*dg;
  float b=ab+time*db;
- //добавляем новую точку
+ //РґРѕР±Р°РІР»СЏРµРј РЅРѕРІСѓСЋ С‚РѕС‡РєСѓ
  SetVertexCoord(new_point.sGLVertex,vx,vy,vz);
  SetTextureCoord(new_point.sGLTexture,vu,vv);
  SetColorValue(new_point.sGLColor,(uint8_t)r,(uint8_t)g,(uint8_t)b);
 }
 
 //----------------------------------------------------------------------------------------------------
-//выполнить коррекцию координат
+//РІС‹РїРѕР»РЅРёС‚СЊ РєРѕСЂСЂРµРєС†РёСЋ РєРѕРѕСЂРґРёРЅР°С‚
 //----------------------------------------------------------------------------------------------------
 void CSGL::Clip(const SGLNVCTPoint *point_array_input,uint16_t point_amount_input,SGLNVCTPoint *point_array_output,uint16_t &point_amount_output,float nx,float ny,float nz,float w)
 {
@@ -258,42 +258,42 @@ void CSGL::Clip(const SGLNVCTPoint *point_array_input,uint16_t point_amount_inpu
   float current_vx=sGLNVCTPoint_Current_Ptr->sGLVertex.X;
   float current_vy=sGLNVCTPoint_Current_Ptr->sGLVertex.Y;
   float current_vz=sGLNVCTPoint_Current_Ptr->sGLVertex.Z;
-  //определяем положение относительно плоскости отсечения
+  //РѕРїСЂРµРґРµР»СЏРµРј РїРѕР»РѕР¶РµРЅРёРµ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РїР»РѕСЃРєРѕСЃС‚Рё РѕС‚СЃРµС‡РµРЅРёСЏ
   float current_ret=current_vx*nx+current_vy*ny+current_vz*nz+w;
 
   const SGLNVCTPoint *sGLNVCTPoint_Next_Ptr=&(point_array_input[next_p]);
   float next_vx=sGLNVCTPoint_Next_Ptr->sGLVertex.X;
   float next_vy=sGLNVCTPoint_Next_Ptr->sGLVertex.Y;
   float next_vz=sGLNVCTPoint_Next_Ptr->sGLVertex.Z;
-  //определяем положение относительно плоскости отсечения
+  //РѕРїСЂРµРґРµР»СЏРµРј РїРѕР»РѕР¶РµРЅРёРµ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РїР»РѕСЃРєРѕСЃС‚Рё РѕС‚СЃРµС‡РµРЅРёСЏ
   float next_ret=next_vx*nx+next_vy*ny+next_vz*nz+w;
 
-  if (current_ret>0)//текущая точка видима
+  if (current_ret>0)//С‚РµРєСѓС‰Р°СЏ С‚РѕС‡РєР° РІРёРґРёРјР°
   {
-   if (next_ret>0)//следующая точка видима
+   if (next_ret>0)//СЃР»РµРґСѓСЋС‰Р°СЏ С‚РѕС‡РєР° РІРёРґРёРјР°
    {
     point_array_output[point_amount_output]=*sGLNVCTPoint_Next_Ptr;
     point_amount_output++;
    }
    else
    {
-    //добавляем новую точку пересечения
+    //РґРѕР±Р°РІР»СЏРµРј РЅРѕРІСѓСЋ С‚РѕС‡РєСѓ РїРµСЂРµСЃРµС‡РµРЅРёСЏ
     SGLNVCTPoint sGLNVCTPoint_New;
     GetIntersectionPlaneAndLine(*sGLNVCTPoint_Current_Ptr,*sGLNVCTPoint_Next_Ptr,sGLNVCTPoint_New,nx,ny,nz,w);
     point_array_output[point_amount_output]=sGLNVCTPoint_New;
     point_amount_output++;
    }
   }
-  else//текущая точка не видна
+  else//С‚РµРєСѓС‰Р°СЏ С‚РѕС‡РєР° РЅРµ РІРёРґРЅР°
   {
-   if (next_ret>0)//следующая точка видна
+   if (next_ret>0)//СЃР»РµРґСѓСЋС‰Р°СЏ С‚РѕС‡РєР° РІРёРґРЅР°
    {
-    //добавляем новую точку пересечения
+    //РґРѕР±Р°РІР»СЏРµРј РЅРѕРІСѓСЋ С‚РѕС‡РєСѓ РїРµСЂРµСЃРµС‡РµРЅРёСЏ
     SGLNVCTPoint sGLNVCTPoint_New;
     GetIntersectionPlaneAndLine(*sGLNVCTPoint_Current_Ptr,*sGLNVCTPoint_Next_Ptr,sGLNVCTPoint_New,nx,ny,nz,w);
     point_array_output[point_amount_output]=sGLNVCTPoint_New;
     point_amount_output++;
-    //добавляем сдедующую точку
+    //РґРѕР±Р°РІР»СЏРµРј СЃРґРµРґСѓСЋС‰СѓСЋ С‚РѕС‡РєСѓ
     point_array_output[point_amount_output]=*sGLNVCTPoint_Next_Ptr;
     point_amount_output++;
    }
@@ -302,15 +302,15 @@ void CSGL::Clip(const SGLNVCTPoint *point_array_input,uint16_t point_amount_inpu
 }
 
 //----------------------------------------------------------------------------------------------------
-//вывести треугольник
+//РІС‹РІРµСЃС‚Рё С‚СЂРµСѓРіРѕР»СЊРЅРёРє
 //----------------------------------------------------------------------------------------------------
 void CSGL::OutputTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C)
 { 	
- const uint16_t BUFFERS=2;//два буфера
- const uint16_t POINTS_IN_TRIANGLE=3;//три точки для каждого треугольника
- const uint16_t POINTS_TO_NEW_POINTS=2;//каждая точка может дать две точки при отсечении
- //выполняем отсечение геометрии для всех ограничивающих плоскостей
- SGLNVCTPoint sGLNVCTPoint[BUFFERS][POINTS_IN_TRIANGLE*POINTS_TO_NEW_POINTS*FRUSTRUM_PLANE];//список хранимых вершин
+ const uint16_t BUFFERS=2;//РґРІР° Р±СѓС„РµСЂР°
+ const uint16_t POINTS_IN_TRIANGLE=3;//С‚СЂРё С‚РѕС‡РєРё РґР»СЏ РєР°Р¶РґРѕРіРѕ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°
+ const uint16_t POINTS_TO_NEW_POINTS=2;//РєР°Р¶РґР°СЏ С‚РѕС‡РєР° РјРѕР¶РµС‚ РґР°С‚СЊ РґРІРµ С‚РѕС‡РєРё РїСЂРё РѕС‚СЃРµС‡РµРЅРёРё
+ //РІС‹РїРѕР»РЅСЏРµРј РѕС‚СЃРµС‡РµРЅРёРµ РіРµРѕРјРµС‚СЂРёРё РґР»СЏ РІСЃРµС… РѕРіСЂР°РЅРёС‡РёРІР°СЋС‰РёС… РїР»РѕСЃРєРѕСЃС‚РµР№
+ SGLNVCTPoint sGLNVCTPoint[BUFFERS][POINTS_IN_TRIANGLE*POINTS_TO_NEW_POINTS*FRUSTRUM_PLANE];//СЃРїРёСЃРѕРє С…СЂР°РЅРёРјС‹С… РІРµСЂС€РёРЅ
 
  sGLNVCTPoint[0][0]=A;
  sGLNVCTPoint[0][1]=B;
@@ -327,13 +327,13 @@ void CSGL::OutputTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C)
   float nz=FrustumPlane[n].Z;
   float w=FrustumPlane[n].W;
   Clip(sGLNVCTPoint[input_index],point_amount,sGLNVCTPoint[output_index],point_amount,nx,ny,nz,w);
-  //переставляем буфера точек
+  //РїРµСЂРµСЃС‚Р°РІР»СЏРµРј Р±СѓС„РµСЂР° С‚РѕС‡РµРє
   uint8_t tmp=input_index;
   input_index=output_index;
   output_index=tmp;
  }
- if (point_amount<POINTS_IN_TRIANGLE) return;//нечего рисовать
- //выполняем отрисовку треугольников
+ if (point_amount<POINTS_IN_TRIANGLE) return;//РЅРµС‡РµРіРѕ СЂРёСЃРѕРІР°С‚СЊ
+ //РІС‹РїРѕР»РЅСЏРµРј РѕС‚СЂРёСЃРѕРІРєСѓ С‚СЂРµСѓРіРѕР»СЊРЅРёРєРѕРІ
  for(uint8_t n=1;n<point_amount-1;n++)
  {
   uint16_t i1=n;
@@ -342,7 +342,7 @@ void CSGL::OutputTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C)
  }
 }
 //----------------------------------------------------------------------------------------------------
-//отрисовка треугольника
+//РѕС‚СЂРёСЃРѕРІРєР° С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°
 //----------------------------------------------------------------------------------------------------
 void CSGL::DrawTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C)
 {
@@ -350,7 +350,7 @@ void CSGL::DrawTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C)
  SGLVector4 sGLVector4_B;
  SGLVector4 sGLVector4_C;
 
- //вычислим проекции вершин треугольника
+ //РІС‹С‡РёСЃР»РёРј РїСЂРѕРµРєС†РёРё РІРµСЂС€РёРЅ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°
  sGLVector4_A.X=A.sGLVertex.X;
  sGLVector4_A.Y=A.sGLVertex.Y;
  sGLVector4_A.Z=A.sGLVertex.Z;
@@ -390,7 +390,7 @@ void CSGL::DrawTriangle(SGLNVCTPoint A,SGLNVCTPoint B,SGLNVCTPoint C)
  RenderTriangle(A,B,C,ap,bp,cp);
 }
 //----------------------------------------------------------------------------------------------------
-//растеризация треугольника на экране
+//СЂР°СЃС‚РµСЂРёР·Р°С†РёСЏ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР° РЅР° СЌРєСЂР°РЅРµ
 //----------------------------------------------------------------------------------------------------
 void CSGL::RenderTriangle(SGLNVCTPoint &a,SGLNVCTPoint &b,SGLNVCTPoint &c,SGLScreenPoint &ap,SGLScreenPoint &bp,SGLScreenPoint &cp)
 {
@@ -427,16 +427,16 @@ void CSGL::RenderTriangle(SGLNVCTPoint &a,SGLNVCTPoint &b,SGLNVCTPoint &c,SGLScr
   bp=tmp_screen;
  }
 
- //проверим, попадает ли треугольник в порт просмотра
+ //РїСЂРѕРІРµСЂРёРј, РїРѕРїР°РґР°РµС‚ Р»Рё С‚СЂРµСѓРіРѕР»СЊРЅРёРє РІ РїРѕСЂС‚ РїСЂРѕСЃРјРѕС‚СЂР°
  int32_t starty=ap.Y;
  int32_t endy=cp.Y;
- if (starty==endy) return;//нечего рисовать
- if (starty>=ViewPort.Y+ViewPort.W) return;//треугольник не виден
- if (endy<ViewPort.X) return;//треугольник не виден
+ if (starty==endy) return;//РЅРµС‡РµРіРѕ СЂРёСЃРѕРІР°С‚СЊ
+ if (starty>=ViewPort.Y+ViewPort.W) return;//С‚СЂРµСѓРіРѕР»СЊРЅРёРє РЅРµ РІРёРґРµРЅ
+ if (endy<ViewPort.X) return;//С‚СЂРµСѓРіРѕР»СЊРЅРёРє РЅРµ РІРёРґРµРЅ
  if (starty<ViewPort.X) starty=ViewPort.X;
  if (endy>=ViewPort.Y+ViewPort.W) endy=ViewPort.Y+ViewPort.W-1;
 
- //смещаем позицию с учётом обрезания по видовому порту
+ //СЃРјРµС‰Р°РµРј РїРѕР·РёС†РёСЋ СЃ СѓС‡С‘С‚РѕРј РѕР±СЂРµР·Р°РЅРёСЏ РїРѕ РІРёРґРѕРІРѕРјСѓ РїРѕСЂС‚Сѓ
  float lyca=(cp.Y-ap.Y);
  float lyba=(bp.Y-ap.Y);
  float offset=starty-ap.Y;
@@ -569,12 +569,12 @@ void CSGL::RenderTriangle(SGLNVCTPoint &a,SGLNVCTPoint &b,SGLNVCTPoint &c,SGLScr
    sGLNCTPoint_1=sGLNCTPoint_2;
    sGLNCTPoint_2=sGLNCTPoint_tmp;
   }
-  //чертим линию треугольника
+  //С‡РµСЂС‚РёРј Р»РёРЅРёСЋ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°
   DrawLine(sy,x1,x2,z1,z2,sGLNCTPoint_1,sGLNCTPoint_2);
  }
 }
 //----------------------------------------------------------------------------------------------------
-//отрисовка линии
+//РѕС‚СЂРёСЃРѕРІРєР° Р»РёРЅРёРё
 //----------------------------------------------------------------------------------------------------
 void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,const SGLNCTPoint &sGLNCTPoint_1,const SGLNCTPoint &sGLNCTPoint_2)
 {
@@ -592,8 +592,8 @@ void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,const SGLN
  float g2=sGLNCTPoint_2.sGLColor.G;
  float b2=sGLNCTPoint_2.sGLColor.B;
 
- //отрицательная координата текстуры - это текстура в другом направлении
- //поэтому коррекции не требуется - достаточно просто отбросить знак
+ //РѕС‚СЂРёС†Р°С‚РµР»СЊРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° С‚РµРєСЃС‚СѓСЂС‹ - СЌС‚Рѕ С‚РµРєСЃС‚СѓСЂР° РІ РґСЂСѓРіРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё
+ //РїРѕСЌС‚РѕРјСѓ РєРѕСЂСЂРµРєС†РёРё РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ - РґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РїСЂРѕСЃС‚Рѕ РѕС‚Р±СЂРѕСЃРёС‚СЊ Р·РЅР°Рє
 
  u1*=sGLTextureObject_Current.Width;
  v1*=sGLTextureObject_Current.Height;
@@ -642,8 +642,8 @@ void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,const SGLN
  float u=u1;
  float v=v1;
 
- //используем линейную интерполяцию текстуры через заданное количество пикселей
- int32_t step=16;//шаг интерполяции
+ //РёСЃРїРѕР»СЊР·СѓРµРј Р»РёРЅРµР№РЅСѓСЋ РёРЅС‚РµСЂРїРѕР»СЏС†РёСЋ С‚РµРєСЃС‚СѓСЂС‹ С‡РµСЂРµР· Р·Р°РґР°РЅРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїРёРєСЃРµР»РµР№
+ int32_t step=16;//С€Р°Рі РёРЅС‚РµСЂРїРѕР»СЏС†РёРё
  if ((x2-x1)<step) step=x2-x1;
  float dz_step=dz*step;
  float du_step=du*step;
@@ -681,7 +681,7 @@ void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,const SGLN
   tu+=dtu;
   tv+=dtv;
 
-  if (*(invdepthptr)>z)//условие теста глубины выполняется
+  if (*(invdepthptr)>z)//СѓСЃР»РѕРІРёРµ С‚РµСЃС‚Р° РіР»СѓР±РёРЅС‹ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
   {
    uint32_t tui=static_cast<uint32_t>(abs(tu));
    uint32_t tvi=static_cast<uint32_t>(abs(tv));
@@ -704,11 +704,11 @@ void CSGL::DrawLine(int32_t y,int32_t x1,int32_t x2,float z1,float z2,const SGLN
 
 
 //****************************************************************************************************
-//открытые функции
+//РѕС‚РєСЂС‹С‚С‹Рµ С„СѓРЅРєС†РёРё
 //****************************************************************************************************
 
 //----------------------------------------------------------------------------------------------------
-//инициализировать
+//РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ
 //----------------------------------------------------------------------------------------------------
 void CSGL::Init(uint32_t screen_width,uint32_t screen_height)
 {
@@ -719,7 +719,7 @@ void CSGL::Init(uint32_t screen_width,uint32_t screen_height)
 }
 
 //----------------------------------------------------------------------------------------------------
-//сделать матрицу единичной
+//СЃРґРµР»Р°С‚СЊ РјР°С‚СЂРёС†Сѓ РµРґРёРЅРёС‡РЅРѕР№
 //----------------------------------------------------------------------------------------------------
 void CSGL::LoadIdentity(void)
 {
@@ -744,7 +744,7 @@ void CSGL::LoadIdentity(void)
  sGLMatrix4_Ptr->W.W=1.0f;
 }
 //----------------------------------------------------------------------------------------------------
-//умножить текущую матрицу на матрицу поворота вокруг вектора
+//СѓРјРЅРѕР¶РёС‚СЊ С‚РµРєСѓС‰СѓСЋ РјР°С‚СЂРёС†Сѓ РЅР° РјР°С‚СЂРёС†Сѓ РїРѕРІРѕСЂРѕС‚Р° РІРѕРєСЂСѓРі РІРµРєС‚РѕСЂР°
 //----------------------------------------------------------------------------------------------------
 void CSGL::Rotatef(float angle,float nx,float ny,float nz)
 {
@@ -787,7 +787,7 @@ void CSGL::Rotatef(float angle,float nx,float ny,float nz)
  MultiplySGLMatrix4(matrix,tmp_matrix,*sGLMatrix4_Ptr);
 }
 //----------------------------------------------------------------------------------------------------
-//умножить текущую матрицу на матрицу смещения
+//СѓРјРЅРѕР¶РёС‚СЊ С‚РµРєСѓС‰СѓСЋ РјР°С‚СЂРёС†Сѓ РЅР° РјР°С‚СЂРёС†Сѓ СЃРјРµС‰РµРЅРёСЏ
 //----------------------------------------------------------------------------------------------------
 void CSGL::Translatef(float nx,float ny,float nz)
 {
@@ -816,7 +816,7 @@ void CSGL::Translatef(float nx,float ny,float nz)
  MultiplySGLMatrix4(matrix,tmp_matrix,*sGLMatrix4_Ptr);
 }
 //----------------------------------------------------------------------------------------------------
-//выбрать матрицу
+//РІС‹Р±СЂР°С‚СЊ РјР°С‚СЂРёС†Сѓ
 //----------------------------------------------------------------------------------------------------
 void CSGL::MatrixMode(MATRIX_MODE matrix)
 {
@@ -826,7 +826,7 @@ void CSGL::MatrixMode(MATRIX_MODE matrix)
 }
 
 //----------------------------------------------------------------------------------------------------
-//задать плоскости отсечения в матрицу проецирования
+//Р·Р°РґР°С‚СЊ РїР»РѕСЃРєРѕСЃС‚Рё РѕС‚СЃРµС‡РµРЅРёСЏ РІ РјР°С‚СЂРёС†Сѓ РїСЂРѕРµС†РёСЂРѕРІР°РЅРёСЏ
 //----------------------------------------------------------------------------------------------------
 void CSGL::Frustrum(float left,float right,float bottom,float top,float near,float far)
 {
@@ -862,7 +862,7 @@ void CSGL::Frustrum(float left,float right,float bottom,float top,float near,flo
  MultiplySGLMatrix4(tmp_matrix,matrix,ProjectionMatrix);
 }
 //----------------------------------------------------------------------------------------------------
-//задать видовой порт
+//Р·Р°РґР°С‚СЊ РІРёРґРѕРІРѕР№ РїРѕСЂС‚
 //----------------------------------------------------------------------------------------------------
 void CSGL::SetViewport(float x,float y,float len,float hgt)
 {
@@ -872,7 +872,7 @@ void CSGL::SetViewport(float x,float y,float len,float hgt)
  ViewPort.W=hgt;
 }
 //----------------------------------------------------------------------------------------------------
-//задать матрицу проецирования
+//Р·Р°РґР°С‚СЊ РјР°С‚СЂРёС†Сѓ РїСЂРѕРµС†РёСЂРѕРІР°РЅРёСЏ
 //----------------------------------------------------------------------------------------------------
 void CSGL::Perspective(float fovy,float aspect,float near,float far)
 {
@@ -883,7 +883,7 @@ void CSGL::Perspective(float fovy,float aspect,float near,float far)
  Frustrum(left,right,bottom,top,near,far);
 }
 //----------------------------------------------------------------------------------------------------
-//задать цвет точки
+//Р·Р°РґР°С‚СЊ С†РІРµС‚ С‚РѕС‡РєРё
 //----------------------------------------------------------------------------------------------------
 void CSGL::Color3f(float r,float g,float b)
 {
@@ -892,11 +892,11 @@ void CSGL::Color3f(float r,float g,float b)
  sGLNVCTPoint_Current.sGLColor.B=b;
 }
 //----------------------------------------------------------------------------------------------------
-//задать текстурные координаты точки
+//Р·Р°РґР°С‚СЊ С‚РµРєСЃС‚СѓСЂРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ С‚РѕС‡РєРё
 //----------------------------------------------------------------------------------------------------
 void CSGL::TexCoordf(float u,float v)
 {
- //применяем матрицу текстурирования
+ //РїСЂРёРјРµРЅСЏРµРј РјР°С‚СЂРёС†Сѓ С‚РµРєСЃС‚СѓСЂРёСЂРѕРІР°РЅРёСЏ
  SGLVector4 vector_in;
  SGLVector4 vector_out;
  vector_in.X=u;
@@ -909,11 +909,11 @@ void CSGL::TexCoordf(float u,float v)
  sGLNVCTPoint_Current.sGLTexture.V=vector_out.Y/vector_out.W;
 }
 //----------------------------------------------------------------------------------------------------
-//задать нормаль в точке
+//Р·Р°РґР°С‚СЊ РЅРѕСЂРјР°Р»СЊ РІ С‚РѕС‡РєРµ
 //----------------------------------------------------------------------------------------------------
 void CSGL::Normal3f(float nx,float ny,float nz)
 {
- //применяем матрицу моделирования к нормали
+ //РїСЂРёРјРµРЅСЏРµРј РјР°С‚СЂРёС†Сѓ РјРѕРґРµР»РёСЂРѕРІР°РЅРёСЏ Рє РЅРѕСЂРјР°Р»Рё
  SGLVector4 vector_in;
  SGLVector4 vector_out;
 
@@ -923,13 +923,13 @@ void CSGL::Normal3f(float nx,float ny,float nz)
  vector_in.W=1;
 
  MultiplySGLVector4ToSGLMatrix4(vector_in,ModelViewMatrix,vector_out);
- //вычитаем смещение
+ //РІС‹С‡РёС‚Р°РµРј СЃРјРµС‰РµРЅРёРµ
  sGLNVCTPoint_Current.sGLNormal.Nx=(vector_out.X-ModelViewMatrix.W.X)/vector_out.W;
  sGLNVCTPoint_Current.sGLNormal.Ny=(vector_out.Y-ModelViewMatrix.W.Y)/vector_out.W;
  sGLNVCTPoint_Current.sGLNormal.Nz=(vector_out.Z-ModelViewMatrix.W.Z)/vector_out.W;
 }
 //----------------------------------------------------------------------------------------------------
-//начать рисование
+//РЅР°С‡Р°С‚СЊ СЂРёСЃРѕРІР°РЅРёРµ
 //----------------------------------------------------------------------------------------------------
 void CSGL::Begin(void)
 {
@@ -938,19 +938,19 @@ void CSGL::Begin(void)
  CreateFrustrumPlane();
 }
 //----------------------------------------------------------------------------------------------------
-//закончить рисование
+//Р·Р°РєРѕРЅС‡РёС‚СЊ СЂРёСЃРѕРІР°РЅРёРµ
 //----------------------------------------------------------------------------------------------------
 void CSGL::End(void)
 {
  DrawMode=false;
 }
 //----------------------------------------------------------------------------------------------------
-//задать координату точки
+//Р·Р°РґР°С‚СЊ РєРѕРѕСЂРґРёРЅР°С‚Сѓ С‚РѕС‡РєРё
 //----------------------------------------------------------------------------------------------------
 void CSGL::Vertex3f(float x,float y,float z)
 {
- if (DrawMode==false) return;//режим рисования не активирован
- //выполним преобразование точек треугольника с учётом матрицы моделирования
+ if (DrawMode==false) return;//СЂРµР¶РёРј СЂРёСЃРѕРІР°РЅРёСЏ РЅРµ Р°РєС‚РёРІРёСЂРѕРІР°РЅ
+ //РІС‹РїРѕР»РЅРёРј РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ С‚РѕС‡РµРє С‚СЂРµСѓРіРѕР»СЊРЅРёРєР° СЃ СѓС‡С‘С‚РѕРј РјР°С‚СЂРёС†С‹ РјРѕРґРµР»РёСЂРѕРІР°РЅРёСЏ
  SGLVector4 vector_in;
  SGLVector4 vector_out;
 
@@ -960,30 +960,30 @@ void CSGL::Vertex3f(float x,float y,float z)
  vector_in.W=1.0f;
 
  MultiplySGLVector4ToSGLMatrix4(vector_in,ModelViewMatrix,vector_out);
- //занесём то, что получилось в список точек
+ //Р·Р°РЅРµСЃС‘Рј С‚Рѕ, С‡С‚Рѕ РїРѕР»СѓС‡РёР»РѕСЃСЊ РІ СЃРїРёСЃРѕРє С‚РѕС‡РµРє
  sGLNVCTPoint_Current.sGLVertex.X=vector_out.X/vector_out.W;
  sGLNVCTPoint_Current.sGLVertex.Y=vector_out.Y/vector_out.W;
  sGLNVCTPoint_Current.sGLVertex.Z=vector_out.Z/vector_out.W;
  sGLNVCTPointArray[PointArrayAmount]=sGLNVCTPoint_Current;
- if (EnableLighting==true) CreateLighColor(sGLNVCTPointArray[PointArrayAmount]);//вычисляем освещённость точки для режима работы с источниками света
+ if (EnableLighting==true) CreateLighColor(sGLNVCTPointArray[PointArrayAmount]);//РІС‹С‡РёСЃР»СЏРµРј РѕСЃРІРµС‰С‘РЅРЅРѕСЃС‚СЊ С‚РѕС‡РєРё РґР»СЏ СЂРµР¶РёРјР° СЂР°Р±РѕС‚С‹ СЃ РёСЃС‚РѕС‡РЅРёРєР°РјРё СЃРІРµС‚Р°
  PointArrayAmount++;
- //отрисовываем вершины
- if (PointArrayAmount==VERTEX_POINT_ARRAY)//уже есть точки на треугольник
+ //РѕС‚СЂРёСЃРѕРІС‹РІР°РµРј РІРµСЂС€РёРЅС‹
+ if (PointArrayAmount==VERTEX_POINT_ARRAY)//СѓР¶Рµ РµСЃС‚СЊ С‚РѕС‡РєРё РЅР° С‚СЂРµСѓРіРѕР»СЊРЅРёРє
  {
   OutputTriangle(sGLNVCTPointArray[0],sGLNVCTPointArray[1],sGLNVCTPointArray[2]);
-  sGLNVCTPointArray[VERTEX_POINT_ARRAY-2]=sGLNVCTPointArray[VERTEX_POINT_ARRAY-1];//смещаем вершины
-  PointArrayAmount=VERTEX_POINT_ARRAY-1;//отменяем последнюю вершину
+  sGLNVCTPointArray[VERTEX_POINT_ARRAY-2]=sGLNVCTPointArray[VERTEX_POINT_ARRAY-1];//СЃРјРµС‰Р°РµРј РІРµСЂС€РёРЅС‹
+  PointArrayAmount=VERTEX_POINT_ARRAY-1;//РѕС‚РјРµРЅСЏРµРј РїРѕСЃР»РµРґРЅСЋСЋ РІРµСЂС€РёРЅСѓ
  }
 }
 //----------------------------------------------------------------------------------------------------
-//задать цвет очистки фона
+//Р·Р°РґР°С‚СЊ С†РІРµС‚ РѕС‡РёСЃС‚РєРё С„РѕРЅР°
 //----------------------------------------------------------------------------------------------------
 void CSGL::ClearColor(float r,float g,float b)
 {
  SetColorValue(sGLColor_Clear,r,g,b);
 }
 //----------------------------------------------------------------------------------------------------
-//очистить буфер
+//РѕС‡РёСЃС‚РёС‚СЊ Р±СѓС„РµСЂ
 //----------------------------------------------------------------------------------------------------
 void CSGL::Clear(uint32_t mode)
 {
@@ -1002,7 +1002,7 @@ void CSGL::Clear(uint32_t mode)
  }
 }
 //----------------------------------------------------------------------------------------------------
-//задать текстуру
+//Р·Р°РґР°С‚СЊ С‚РµРєСЃС‚СѓСЂСѓ
 //----------------------------------------------------------------------------------------------------
 void CSGL::BindTexture(uint32_t width,uint32_t height,SGLRGBAByteColor *sGLRGBAByteColor_Ptr_Set)
 {
@@ -1011,7 +1011,7 @@ void CSGL::BindTexture(uint32_t width,uint32_t height,SGLRGBAByteColor *sGLRGBAB
  sGLTextureObject_Current.sGLRGBAByteColor_Ptr=sGLRGBAByteColor_Ptr_Set;
 }
 //----------------------------------------------------------------------------------------------------
-//разрешить
+//СЂР°Р·СЂРµС€РёС‚СЊ
 //----------------------------------------------------------------------------------------------------
 void CSGL::Enable(ITEM_ID mode)
 {
@@ -1026,7 +1026,7 @@ void CSGL::Enable(ITEM_ID mode)
  if (mode==SGL_LIGHT7) sLight[7].Enabled=true;
 }
 //----------------------------------------------------------------------------------------------------
-//запретить
+//Р·Р°РїСЂРµС‚РёС‚СЊ
 //----------------------------------------------------------------------------------------------------
 void CSGL::Disable(ITEM_ID mode)
 {
@@ -1041,7 +1041,7 @@ void CSGL::Disable(ITEM_ID mode)
  if (mode==SGL_LIGHT7) sLight[7].Enabled=false;
 }
 //----------------------------------------------------------------------------------------------------
-//задать параметры источника света
+//Р·Р°РґР°С‚СЊ РїР°СЂР°РјРµС‚СЂС‹ РёСЃС‚РѕС‡РЅРёРєР° СЃРІРµС‚Р°
 //----------------------------------------------------------------------------------------------------
 void CSGL::Lightfv(ITEM_ID light,PARAM_ID param,float *ptr)
 {
@@ -1061,7 +1061,7 @@ void CSGL::Lightfv(ITEM_ID light,PARAM_ID param,float *ptr)
   sLight_Ptr->sGLVertex.Y=*(ptr+1);
   sLight_Ptr->sGLVertex.Z=*(ptr+2);
 
-  //вычислим положение источника света с учётом матрицы моделирования
+  //РІС‹С‡РёСЃР»РёРј РїРѕР»РѕР¶РµРЅРёРµ РёСЃС‚РѕС‡РЅРёРєР° СЃРІРµС‚Р° СЃ СѓС‡С‘С‚РѕРј РјР°С‚СЂРёС†С‹ РјРѕРґРµР»РёСЂРѕРІР°РЅРёСЏ
   SGLVector4 vector_in;
   SGLVector4 vector_out;
 
@@ -1120,7 +1120,7 @@ void CSGL::Lightfv(ITEM_ID light,PARAM_ID param,float *ptr)
  }
 }
 //----------------------------------------------------------------------------------------------------
-//задать параметры материала
+//Р·Р°РґР°С‚СЊ РїР°СЂР°РјРµС‚СЂС‹ РјР°С‚РµСЂРёР°Р»Р°
 //----------------------------------------------------------------------------------------------------
 void CSGL::Materialfv(PARAM_ID param,float *ptr)
 {
@@ -1160,11 +1160,11 @@ void CSGL::Materialfv(PARAM_ID param,float *ptr)
 }
 
 //****************************************************************************************************
-//статические функции
+//СЃС‚Р°С‚РёС‡РµСЃРєРёРµ С„СѓРЅРєС†РёРё
 //****************************************************************************************************
 
 //----------------------------------------------------------------------------------------------------
-//задать координаты вершины
+//Р·Р°РґР°С‚СЊ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµСЂС€РёРЅС‹
 //----------------------------------------------------------------------------------------------------
 void CSGL::SetVertexCoord(SGLVertex &sGLVertex,float x,float y,float z)
 {
@@ -1173,7 +1173,7 @@ void CSGL::SetVertexCoord(SGLVertex &sGLVertex,float x,float y,float z)
  sGLVertex.Z=z;
 }
 //----------------------------------------------------------------------------------------------------
-//задать координаты нормали
+//Р·Р°РґР°С‚СЊ РєРѕРѕСЂРґРёРЅР°С‚С‹ РЅРѕСЂРјР°Р»Рё
 //----------------------------------------------------------------------------------------------------
 void CSGL::SetNormalCoord(SGLNormal &sGLNormal,float nx,float ny,float nz)
 {
@@ -1182,7 +1182,7 @@ void CSGL::SetNormalCoord(SGLNormal &sGLNormal,float nx,float ny,float nz)
  sGLNormal.Nz=nz;
 }
 //----------------------------------------------------------------------------------------------------
-//задать координаты текстуры
+//Р·Р°РґР°С‚СЊ РєРѕРѕСЂРґРёРЅР°С‚С‹ С‚РµРєСЃС‚СѓСЂС‹
 //----------------------------------------------------------------------------------------------------
 void CSGL::SetTextureCoord(SGLTexture &sGLTexture,float u,float v)
 {
@@ -1190,7 +1190,7 @@ void CSGL::SetTextureCoord(SGLTexture &sGLTexture,float u,float v)
  sGLTexture.V=v;
 }
 //----------------------------------------------------------------------------------------------------
-//задать цвет
+//Р·Р°РґР°С‚СЊ С†РІРµС‚
 //----------------------------------------------------------------------------------------------------
 void CSGL::SetColorValue(SGLColor &sGLColor,float r,float g,float b)
 {

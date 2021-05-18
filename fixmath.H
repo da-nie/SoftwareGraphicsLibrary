@@ -4,7 +4,9 @@
 #include <math.h>
 #include <stdint.h>
 
-typedef int64_t fixed_t;
+typedef int32_t fixed_t;
+
+const float FIXED2FLOAT_COEFF = 1.0f / 65536.0f;
 
 inline fixed_t int2fixed_t(int16_t x)
 {
@@ -32,7 +34,7 @@ inline int32_t fixed2int(fixed_t x)
 }
 inline float fixed2float(fixed_t x)
 {
- return(((float)x)/65536.0f);
+ return(((float)x) * FIXED2FLOAT_COEFF);
 }
 inline fixed_t fixabs(fixed_t x)
 {
