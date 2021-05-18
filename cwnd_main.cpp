@@ -36,12 +36,12 @@ void CWnd_Main::VectorProduct(float *xv1,float *yv1,float *zv1,float xv2,float y
  float yn=-(x1*z2-z1*x2);
  float zn=x1*y2-y1*x2;
  float len=sqrtf(xn*xn+yn*yn+zn*zn);
- if (len!=0)
- {
-  xn=xn/len;
-  yn=yn/len;
-  zn=zn/len;
- }
+ float inv_len = (len != 0.0f) ? 1.0f / len : 0.0f;
+
+ xn *= inv_len;
+ yn *= inv_len;
+ zn *= inv_len;
+
  *xv1=xn;
  *yv1=yn;
  *zv1=zn;
