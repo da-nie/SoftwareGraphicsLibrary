@@ -34,7 +34,7 @@ inline int32_t fixed2int(fixed_t x)
 }
 inline float fixed2float(fixed_t x)
 {
- return(((float)x) * 65536.0f);
+ return(((float)x) * FIXED2FLOAT_COEFF);
 }
 inline fixed_t fixabs(fixed_t x)
 {
